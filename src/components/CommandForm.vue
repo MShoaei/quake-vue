@@ -56,15 +56,24 @@ export default Vue.extend({
     submitForm: function() {
       console.log(JSON.stringify(this.finalData));
       this.loading = true;
+      axios.defaults.timeout = 5000;
       axios
         .post(
           "http://192.168.43.28:9990/command",
           JSON.stringify(this.finalData)
         )
         .then(
-          (response: AxiosResponse<{ message: string; result: string }>) => {
+          (
+            response: AxiosResponse<{ message: string; tx: string; rx: string }>
+          ) => {
             console.log(response.data);
-            this.commandResponse = response.data.message;
+            this.commandResponse =
+              response.data.message +
+              " " +
+              "tx: " +
+              response.data.tx +
+              " rx: " +
+              response.data.rx;
             this.errorResponse = false;
           }
         )
@@ -127,7 +136,7 @@ export default Vue.extend({
 
     Commands: [
       {
-        value: "chStandby",
+        value: "ChStandby",
         text: "Channel Standby",
         flags: [
           {
@@ -173,7 +182,7 @@ export default Vue.extend({
         ]
       },
       {
-        value: "chModeA",
+        value: "ChModeA",
         text: "Channel Mode A",
         flags: [
           {
@@ -207,7 +216,7 @@ export default Vue.extend({
         ]
       },
       {
-        value: "chModeB",
+        value: "ChModeB",
         text: "Channel Mode B",
         flags: [
           {
@@ -241,7 +250,7 @@ export default Vue.extend({
         ]
       },
       {
-        value: "chModeSel",
+        value: "ChModeSel",
         text: "Select Channel Mode",
         flags: [
           {
