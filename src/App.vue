@@ -1,40 +1,67 @@
 <template>
   <v-app>
     <v-app-bar app color="primary" dark>
-      <v-btn icon @click.stop="drawer = !drawer"
-        ><v-icon>mdi-menu</v-icon></v-btn
-      >
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-spacer></v-spacer>
+      <v-btn color="green" @click.stop="overlay = true">
+        Update
+        <v-icon dark right>mdi-cloud-upload</v-icon>
+      </v-btn>
     </v-app-bar>
     <v-navigation-drawer
       v-model="drawer"
-      color="primary"
-      absolute
+      color="white"
+      fixed
       temporary
-      src="./assets/bg-2.webp"
-      dark
+      light
     >
-      <v-list dense nav class="py-0"> </v-list>
+      <v-list-item to="/" link>
+        <v-list-item-icon>
+          <v-icon>mdi-home</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          Home
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item to="/stream" link>
+        <v-list-item-icon>
+          <v-icon>mdi-view-stream</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          Stream data
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item to="/about" link>
+        <v-list-item-icon>
+          <v-icon>mdi-information</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          About
+        </v-list-item-content>
+      </v-list-item>
     </v-navigation-drawer>
     <v-content>
-      <!--      <router-view />-->
-      <CommandForm />
+      <ConfirmUpdateOverlay :overlay="overlay" />
+      <router-view />
+      <!--      <CommandForm />-->
     </v-content>
   </v-app>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import CommandForm from "./components/CommandForm.vue";
+import ConfirmUpdateOverlay from "@/components/ConfirmUpdateOverlay.vue";
 
 export default Vue.extend({
   name: "App",
 
   components: {
-    CommandForm
+    ConfirmUpdateOverlay
   },
 
   data: () => ({
-    drawer: false
+    drawer: false,
+    overlay: false
   })
 });
 </script>
