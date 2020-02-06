@@ -46,7 +46,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import axios, { AxiosResponse, AxiosError } from "axios";
+import { AxiosResponse, AxiosError } from "axios";
+import axios from "@/plugins/axios";
 
 export default Vue.extend({
   name: "CommandForm",
@@ -54,19 +55,15 @@ export default Vue.extend({
   computed: {},
   methods: {
     submitForm: function() {
-      console.log(JSON.stringify(this.finalData));
+      // console.log(JSON.stringify(this.finalData));
       this.loading = true;
-      axios.defaults.timeout = 5000;
       axios
-        .post(
-          "http://192.168.43.28:9990/command",
-          JSON.stringify(this.finalData)
-        )
+        .post("/api/command", JSON.stringify(this.finalData))
         .then(
           (
             response: AxiosResponse<{ message: string; tx: string; rx: string }>
           ) => {
-            console.log(response.data);
+            // console.log(response.data);
             this.commandResponse =
               response.data.message +
               " " +
@@ -78,7 +75,7 @@ export default Vue.extend({
           }
         )
         .catch((error: AxiosError<string>) => {
-          console.log(error);
+          // console.log(error);
           this.commandResponse = error.message;
           this.errorResponse = true;
         });
@@ -111,7 +108,7 @@ export default Vue.extend({
         this.selectedFlags.push(flag);
         this.finalData.Flags.push({ Name: "--" + flag.value, Value: "" });
       });
-      console.log(this.finalData.Flags);
+      // console.log(this.finalData.Flags);
     }
   },
 

@@ -3,7 +3,7 @@
     <v-app-bar app color="primary" dark>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
-      <v-btn color="green" @click.stop="overlay = true">
+      <v-btn color="green" @click="overlay = !overlay">
         Update
         <v-icon dark right>mdi-cloud-upload</v-icon>
       </v-btn>

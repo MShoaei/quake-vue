@@ -35,7 +35,6 @@ export default {
   name: "StreamForm",
   methods: {
     stream: function() {
-      console.log("begin!");
       let conn = new WebSocket("ws://192.168.43.28:9990/");
       conn.onmessage = (event: MessageEvent) => {
         // this += event.data + "\n";
