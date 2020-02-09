@@ -2,7 +2,7 @@
   <v-container>
     <v-form @submit.prevent="submitForm">
       <v-row>
-        <v-col cols="12" sm="3">
+        <v-col cols="12" sm="5">
           <v-select
             label="Commands"
             :items="Commands"
