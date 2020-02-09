@@ -8,13 +8,7 @@
         <v-icon dark right>mdi-cloud-upload</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-navigation-drawer
-      v-model="drawer"
-      color="white"
-      fixed
-      temporary
-      light
-    >
+    <v-navigation-drawer v-model="drawer" color="white" fixed temporary light>
       <v-list-item to="/" link>
         <v-list-item-icon>
           <v-icon>mdi-home</v-icon>
