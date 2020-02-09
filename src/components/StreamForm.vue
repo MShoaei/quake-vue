@@ -2,7 +2,7 @@
   <v-container id="wrapper" class="d-flex flex-column justify-space-between">
     <v-row>
       <v-col cols="12">
-        <v-textarea readonly :rows="rows">{{ streamData }}</v-textarea>
+        <v-textarea readonly :rows="rows" :value="streamData"></v-textarea>
       </v-col>
     </v-row>
     <v-form class="d-flex" id="form">
@@ -13,7 +13,7 @@
         <v-col cols="6" md="4">
           <v-text-field label="Delay (ms)" required></v-text-field>
         </v-col>
-        <v-col cols="6" sm="4">
+        <v-col cols="6" md="4">
           <v-text-field label="Duration (s)" required></v-text-field>
         </v-col>
         <v-col cols="6" md="12">
@@ -33,15 +33,24 @@
 <script lang="ts">
 export default {
   name: "StreamForm",
+  data() {
+    return {
+      streamData: "",
+      count: 0
+    };
+  },
   methods: {
-    stream: function() {
-      let conn = new WebSocket("ws://192.168.43.28:9990/");
+    stream: function(this: any) {
+      let conn = new WebSocket(
+        "ws://" + window.location.host + "/api/readlive"
+      );
       conn.onmessage = (event: MessageEvent) => {
-        // this += event.data + "\n";
+        this.streamData += event.data + "\n";
       };
       conn.onclose = (event: CloseEvent) => {
-        // streamData += "connection closed";
-        window.location.replace("/getfile");
+        this.streamData += "connection closed\n";
+        this.streamData += event.code;
+        window.location.replace("/api/getfile");
       };
     }
   },
@@ -49,11 +58,6 @@ export default {
     rows() {
       return 10;
     }
-  },
-  data: () => {
-    return {
-      streamData: ""
-    };
   }
 };
 </script>
