@@ -31,6 +31,9 @@
 </template>
 
 <script lang="ts">
+import axios from "@/plugins/axios";
+import { AxiosError } from "axios";
+
 export default {
   name: "StreamForm",
   data() {
@@ -41,17 +44,24 @@ export default {
   },
   methods: {
     stream: function(this: any) {
-      let conn = new WebSocket(
-        "ws://" + window.location.host + "/api/readlive"
-      );
-      conn.onmessage = (event: MessageEvent) => {
-        this.streamData += event.data + "\n";
-      };
-      conn.onclose = (event: CloseEvent) => {
-        this.streamData += "connection closed\n";
-        this.streamData += event.code;
-        window.location.replace("/api/getfile");
-      };
+      axios
+        .post("/api/command", JSON.stringify(this.finalData))
+        .then(() => {
+          let conn = new WebSocket(
+            "ws://" + window.location.host + "/api/readlive"
+          );
+          conn.onmessage = (event: MessageEvent) => {
+            this.streamData += event.data + "\n";
+          };
+          conn.onclose = (event: CloseEvent) => {
+            this.streamData += "connection closed\n";
+            this.streamData += event.code;
+            window.location.replace("/api/getfile");
+          };
+        })
+        .catch((error: AxiosError<string>) => {
+          this.streamData = error;
+        });
     }
   },
   computed: {
