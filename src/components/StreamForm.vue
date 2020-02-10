@@ -51,10 +51,11 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import axios from "@/plugins/axios";
 import { AxiosError } from "axios";
 
-export default {
+export default Vue.extend({
   name: "StreamForm",
   data() {
     return {
@@ -97,7 +98,7 @@ export default {
       return 10;
     }
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>

@@ -3,11 +3,12 @@
 </template>
 
 <script lang="ts">
-export default {
+import Vue from "vue";
+export default Vue.extend({
   name: "ConfirmUpdateOverlay",
   props: ["overlay"],
-  data: () => ({})
-};
+  data() {}
+});
 </script>
 
 <style lang="scss" scoped></style>
