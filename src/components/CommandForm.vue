@@ -12,14 +12,33 @@
         </v-col>
       </v-row>
       <v-row v-if="finalData.Command">
-        <template v-for="(f, index) in selectedFlags">
-          <v-col :key="index" cols="3" md="2">
+        <template v-if="!variableInput">
+          <template v-for="(f, index) in selectedFlags">
+            <v-col :key="index" cols="3" md="2">
+              <v-select
+                :key="f.value"
+                :label="f.text"
+                :items="f.options"
+                v-model="finalData.Flags[index].Value"
+              ></v-select>
+            </v-col>
+          </template>
+        </template>
+        <template v-else>
+          <v-col cols="3" md="2">
             <v-select
-              :key="f.value"
-              :label="f.text"
-              :items="f.options"
-              v-model="finalData.Flags[index].Value"
+              :key="selectedFlags[0].value"
+              :label="selectedFlags[0].text"
+              :items="selectedFlags[0].options"
+              v-model="finalData.Flags[0].Value"
             ></v-select>
+          </v-col>
+          <v-col cols="3" md="2">
+            <v-text-field
+              :label="selectedFlags[1].value"
+              v-model.trim="finalData.Flags[1].Value"
+              required
+            ></v-text-field>
           </v-col>
         </template>
       </v-row>
@@ -97,11 +116,17 @@ export default Vue.extend({
             }[];
           }
         | undefined;
-      cmd = this.Commands.find(f => f.value === this.finalData.Command);
-      if (cmd === undefined) {
+      const i = this.Commands.findIndex(
+        f => f.value === this.finalData.Command
+      );
+      if (i === -1) {
         throw "cmd is undefined";
       }
-
+      this.variableInput = false;
+      cmd = this.Commands[i];
+      if (i >= 18 && i <= 45) {
+        this.variableInput = true;
+      }
       this.finalData.Flags = [];
       this.selectedFlags = [];
       cmd.flags.forEach(flag => {
@@ -116,6 +141,7 @@ export default Vue.extend({
     loading: false,
     commandResponse: "",
     errorResponse: false,
+    variableInput: false,
 
     finalData: { Command: "", Flags: [] } as {
       Command: string;
@@ -633,7 +659,7 @@ export default Vue.extend({
       },
       {
         value: "PrechargeBuffer1",
-        text: "GPIO Read Data",
+        text: "Precharge buffer 1",
         flags: [
           {
             value: "write",
@@ -679,7 +705,7 @@ export default Vue.extend({
       },
       {
         value: "PrechargeBuffer2",
-        text: "GPIO Read Data",
+        text: "Precharge Buffer 2",
         flags: [
           {
             value: "write",
@@ -724,8 +750,8 @@ export default Vue.extend({
         ]
       },
       {
-        value: "adcPositiveRefPrechargeBuf",
-        text: "GPIO Read Data",
+        value: "PositiveRefPrechargeBuf",
+        text: "Positive Reference Precharge Buffer",
         flags: [
           {
             value: "write",
@@ -771,7 +797,7 @@ export default Vue.extend({
       },
       {
         value: "NegativeRefPrechargeBuf",
-        text: "GPIO Read Data",
+        text: "Negative Reference Precharge Buffer",
         flags: [
           {
             value: "write",
@@ -1394,7 +1420,7 @@ export default Vue.extend({
         ]
       },
       {
-        value: "reset",
+        value: "SoftReset",
         text: "Reset ADC",
         flags: []
       }
