@@ -422,9 +422,6 @@ export default Vue.extend({
               { value: "f", text: "read" }
             ]
           },
-
-          //TODO: add soft reset
-
           {
             value: "crc-sel",
             text: "CRC select",
@@ -635,6 +632,722 @@ export default Vue.extend({
         ]
       },
       {
+        value: "PrechargeBuffer1",
+        text: "GPIO Read Data",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "",
+            text: "ch3",
+            options: [
+              { value: "t", text: "standby" },
+              { value: "f", text: "enabled" }
+            ]
+          },
+          {
+            value: "",
+            text: "ch2",
+            options: [
+              { value: "t", text: "standby" },
+              { value: "f", text: "enabled" }
+            ]
+          },
+          {
+            value: "",
+            text: "ch1",
+            options: [
+              { value: "t", text: "standby" },
+              { value: "f", text: "enabled" }
+            ]
+          },
+          {
+            value: "",
+            text: "ch0",
+            options: [
+              { value: "t", text: "standby" },
+              { value: "f", text: "enabled" }
+            ]
+          }
+        ]
+      },
+      {
+        value: "PrechargeBuffer2",
+        text: "GPIO Read Data",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "",
+            text: "ch3",
+            options: [
+              { value: "t", text: "standby" },
+              { value: "f", text: "enabled" }
+            ]
+          },
+          {
+            value: "",
+            text: "ch2",
+            options: [
+              { value: "t", text: "standby" },
+              { value: "f", text: "enabled" }
+            ]
+          },
+          {
+            value: "",
+            text: "ch1",
+            options: [
+              { value: "t", text: "standby" },
+              { value: "f", text: "enabled" }
+            ]
+          },
+          {
+            value: "",
+            text: "ch0",
+            options: [
+              { value: "t", text: "standby" },
+              { value: "f", text: "enabled" }
+            ]
+          }
+        ]
+      },
+      {
+        value: "adcPositiveRefPrechargeBuf",
+        text: "GPIO Read Data",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "",
+            text: "ch3",
+            options: [
+              { value: "t", text: "standby" },
+              { value: "f", text: "enabled" }
+            ]
+          },
+          {
+            value: "",
+            text: "ch2",
+            options: [
+              { value: "t", text: "standby" },
+              { value: "f", text: "enabled" }
+            ]
+          },
+          {
+            value: "",
+            text: "ch1",
+            options: [
+              { value: "t", text: "standby" },
+              { value: "f", text: "enabled" }
+            ]
+          },
+          {
+            value: "",
+            text: "ch0",
+            options: [
+              { value: "t", text: "standby" },
+              { value: "f", text: "enabled" }
+            ]
+          }
+        ]
+      },
+      {
+        value: "NegativeRefPrechargeBuf",
+        text: "GPIO Read Data",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "",
+            text: "ch3",
+            options: [
+              { value: "t", text: "standby" },
+              { value: "f", text: "enabled" }
+            ]
+          },
+          {
+            value: "",
+            text: "ch2",
+            options: [
+              { value: "t", text: "standby" },
+              { value: "f", text: "enabled" }
+            ]
+          },
+          {
+            value: "",
+            text: "ch1",
+            options: [
+              { value: "t", text: "standby" },
+              { value: "f", text: "enabled" }
+            ]
+          },
+          {
+            value: "",
+            text: "ch0",
+            options: [
+              { value: "t", text: "standby" },
+              { value: "f", text: "enabled" }
+            ]
+          }
+        ]
+      },
+      {
+        value: "Ch0OffsetMSB",
+        text: "Ch0 offset MSB",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "MSB",
+            text: "MSB register",
+            options: [{ value: "1", text: "MSB value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch0OffsetMid",
+        text: "Ch0 offset Mid",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "Mid",
+            text: "Mid register",
+            options: [{ value: "1", text: "Mid value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch0OffsetLSB",
+        text: "Ch0 offset LSB",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "LSB",
+            text: "LSB register",
+            options: [{ value: "1", text: "LSB value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch1OffsetMSB",
+        text: "Ch1 offset MSB",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "MSB",
+            text: "MSB register",
+            options: [{ value: "1", text: "MSB value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch1OffsetMid",
+        text: "Ch1 offset Mid",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "Mid",
+            text: "Mid register",
+            options: [{ value: "1", text: "Mid value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch1OffsetLSB",
+        text: "Ch1 offset LSB",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "LSB",
+            text: "LSB register",
+            options: [{ value: "1", text: "LSB value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch2OffsetMSB",
+        text: "Ch2 offset MSB",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "MSB",
+            text: "MSB register",
+            options: [{ value: "1", text: "MSB value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch2OffsetMid",
+        text: "Ch2 offset Mid",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "Mid",
+            text: "Mid register",
+            options: [{ value: "1", text: "Mid value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch2OffsetLSB",
+        text: "Ch2 offset LSB",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "LSB",
+            text: "LSB register",
+            options: [{ value: "1", text: "LSB value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch3OffsetMSB",
+        text: "Ch3 offset MSB",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "MSB",
+            text: "MSB register",
+            options: [{ value: "1", text: "MSB value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch3OffsetMid",
+        text: "Ch3 offset Mid",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "Mid",
+            text: "Mid register",
+            options: [{ value: "1", text: "Mid value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch3OffsetLSB",
+        text: "Ch3 offset LSB",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "LSB",
+            text: "LSB register",
+            options: [{ value: "1", text: "LSB value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch0GainMSB",
+        text: "Ch0 gain MSB",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "MSB",
+            text: "MSB register",
+            options: [{ value: "1", text: "MSB value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch0GainMid",
+        text: "Ch0 gain Mid",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "Mid",
+            text: "Mid register",
+            options: [{ value: "1", text: "Mid value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch0GainLSB",
+        text: "Ch0 gain LSB",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "LSB",
+            text: "LSB register",
+            options: [{ value: "1", text: "LSB value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch1GainMSB",
+        text: "Ch1 gain MSB",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "MSB",
+            text: "MSB register",
+            options: [{ value: "1", text: "MSB value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch1GainMid",
+        text: "Ch1 gain Mid",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "Mid",
+            text: "Mid register",
+            options: [{ value: "1", text: "Mid value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch1GainLSB",
+        text: "Ch1 gain LSB",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "LSB",
+            text: "LSB register",
+            options: [{ value: "1", text: "LSB value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch2GainMSB",
+        text: "Ch2 gain MSB",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "MSB",
+            text: "MSB register",
+            options: [{ value: "1", text: "MSB value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch2GainMid",
+        text: "Ch2 gain Mid",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "Mid",
+            text: "Mid register",
+            options: [{ value: "1", text: "Mid value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch2GainLSB",
+        text: "Ch2 gain LSB",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "LSB",
+            text: "LSB register",
+            options: [{ value: "1", text: "LSB value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch3GainMSB",
+        text: "Ch3 gain MSB",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "MSB",
+            text: "MSB register",
+            options: [{ value: "1", text: "MSB value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch3GainMid",
+        text: "Ch3 gain Mid",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "Mid",
+            text: "Mid register",
+            options: [{ value: "1", text: "Mid value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch3GainLSB",
+        text: "Ch3 gain LSB",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "LSB",
+            text: "LSB register",
+            options: [{ value: "1", text: "LSB value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch0SyncOffset",
+        text: "Ch0 sync phase offset",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "offset",
+            text: "offset register",
+            options: [{ value: "1", text: "offset value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch1SyncOffset",
+        text: "Ch1 sync phase offset",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "offset",
+            text: "offset register",
+            options: [{ value: "1", text: "offset value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch2SyncOffset",
+        text: "Ch2 sync phase offset",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "offset",
+            text: "offset register",
+            options: [{ value: "1", text: "offset value" }]
+          }
+        ]
+      },
+      {
+        value: "Ch3SyncOffset",
+        text: "Ch3 sync phase offset",
+        flags: [
+          {
+            value: "write",
+            text: "read or write",
+            options: [
+              { value: "t", text: "write" },
+              { value: "f", text: "read" }
+            ]
+          },
+          {
+            value: "offset",
+            text: "offset register",
+            options: [{ value: "1", text: "offset value" }]
+          }
+        ]
+      },
+      {
         value: "readAll",
         text: "Start Reading",
         flags: [
@@ -683,16 +1396,7 @@ export default Vue.extend({
       {
         value: "reset",
         text: "Reset ADC",
-        flags: [
-          {
-            value: "write",
-            text: "read or write",
-            options: [
-              { value: "t", text: "write" },
-              { value: "f", text: "read" }
-            ]
-          }
-        ]
+        flags: []
       }
     ]
   })
