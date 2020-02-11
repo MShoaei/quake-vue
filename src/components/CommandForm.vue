@@ -1420,7 +1420,7 @@ export default Vue.extend({
         ]
       },
       {
-        value: "SoftReset",
+        value: "HardReset",
         text: "Reset ADC",
         flags: []
       }
