@@ -1,6 +1,8 @@
 FROM node:lts-alpine as builder
+RUN apk add python make gcc g++
 WORKDIR /app
 COPY package*.json ./
+#RUN npm install node-gyp --verbose
 RUN npm install --verbose
 COPY . .
 RUN npm run build
