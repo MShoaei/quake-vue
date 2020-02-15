@@ -343,8 +343,8 @@ export default Vue.extend({
             text: "Power Mode",
             options: [
               { value: "0", text: "Low Power" },
-              { value: "1", text: "Median" },
-              { value: "2", text: "Fast" }
+              { value: "2", text: "Median" },
+              { value: "3", text: "Fast" }
             ]
           },
           {
@@ -360,8 +360,8 @@ export default Vue.extend({
             text: "MCLK Div",
             options: [
               { value: "0", text: "MCLK/32" },
-              { value: "1", text: "MCLK/8" },
-              { value: "2", text: "MCLK/4" }
+              { value: "2", text: "MCLK/8" },
+              { value: "3", text: "MCLK/4" }
             ]
           }
         ]
