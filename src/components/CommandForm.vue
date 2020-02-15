@@ -508,16 +508,7 @@ export default Vue.extend({
       {
         value: "RevisionID",
         text: "Read Revision ID",
-        flags: [
-          {
-            value: "write",
-            text: "read or write",
-            options: [
-              // { value: "t", text: "write" },
-              { value: "f", text: "read" }
-            ]
-          }
-        ]
+        flags: []
       },
       {
         value: "GPIOControl",
@@ -670,42 +661,42 @@ export default Vue.extend({
             ]
           },
           {
-            value: "",
-            text: "ch3",
+            value: "ch1-neg",
+            text: "Ch1 prebuf negative enable",
             options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
+              { value: "0", text: "off" },
+              { value: "1", text: "on (default)" }
             ]
           },
           {
-            value: "",
-            text: "ch2",
+            value: "ch1-pos",
+            text: "Ch1 prebuf positive enable",
             options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
+              { value: "0", text: "off" },
+              { value: "1", text: "on (default)" }
             ]
           },
           {
-            value: "",
-            text: "ch1",
+            value: "ch0-neg",
+            text: "Ch0 prebuf negative enable",
             options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
+              { value: "0", text: "off" },
+              { value: "1", text: "on (default)" }
             ]
           },
           {
-            value: "",
-            text: "ch0",
+            value: "ch0-pos",
+            text: "Ch0 prebuf positive enable",
             options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
+              { value: "0", text: "off" },
+              { value: "1", text: "on (default)" }
             ]
           }
         ]
       },
       {
         value: "PrechargeBuffer2",
-        text: "Precharge Buffer 2",
+        text: "Precharge buffer 2",
         flags: [
           {
             value: "write",
@@ -716,35 +707,35 @@ export default Vue.extend({
             ]
           },
           {
-            value: "",
-            text: "ch3",
+            value: "ch3-neg",
+            text: "Ch3 prebuf negative enable",
             options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
+              { value: "0", text: "off" },
+              { value: "1", text: "on (default)" }
             ]
           },
           {
-            value: "",
-            text: "ch2",
+            value: "ch3-pos",
+            text: "Ch3 prebuf positive enable",
             options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
+              { value: "0", text: "off" },
+              { value: "1", text: "on (default)" }
             ]
           },
           {
-            value: "",
-            text: "ch1",
+            value: "ch2-neg",
+            text: "Ch2 prebuf negative enable",
             options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
+              { value: "0", text: "off" },
+              { value: "1", text: "on (default)" }
             ]
           },
           {
-            value: "",
-            text: "ch0",
+            value: "ch2-pos",
+            text: "Ch2 prebuf positive enable",
             options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
+              { value: "0", text: "off" },
+              { value: "1", text: "on (default)" }
             ]
           }
         ]
@@ -762,35 +753,35 @@ export default Vue.extend({
             ]
           },
           {
-            value: "",
+            value: "ch3",
             text: "ch3",
             options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
+              { value: "0", text: "off" },
+              { value: "1", text: "on" }
             ]
           },
           {
-            value: "",
+            value: "ch2",
             text: "ch2",
             options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
+              { value: "0", text: "off" },
+              { value: "1", text: "on" }
             ]
           },
           {
-            value: "",
+            value: "ch1",
             text: "ch1",
             options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
+              { value: "0", text: "off" },
+              { value: "1", text: "on" }
             ]
           },
           {
-            value: "",
+            value: "ch0",
             text: "ch0",
             options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
+              { value: "0", text: "off" },
+              { value: "1", text: "on" }
             ]
           }
         ]
@@ -808,35 +799,35 @@ export default Vue.extend({
             ]
           },
           {
-            value: "",
+            value: "ch3",
             text: "ch3",
             options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
+              { value: "0", text: "off" },
+              { value: "1", text: "on" }
             ]
           },
           {
-            value: "",
+            value: "ch2",
             text: "ch2",
             options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
+              { value: "0", text: "off" },
+              { value: "1", text: "on" }
             ]
           },
           {
-            value: "",
+            value: "ch1",
             text: "ch1",
             options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
+              { value: "0", text: "off" },
+              { value: "1", text: "on" }
             ]
           },
           {
-            value: "",
+            value: "ch0",
             text: "ch0",
             options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
+              { value: "0", text: "off" },
+              { value: "1", text: "on" }
             ]
           }
         ]
@@ -1375,49 +1366,8 @@ export default Vue.extend({
       },
       {
         value: "readAll",
-        text: "Start Reading",
-        flags: [
-          {
-            value: "write",
-            text: "read or write",
-            options: [
-              { value: "t", text: "write" },
-              { value: "f", text: "read" }
-            ]
-          },
-          {
-            value: "",
-            text: "ch3",
-            options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
-            ]
-          },
-          {
-            value: "",
-            text: "ch2",
-            options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
-            ]
-          },
-          {
-            value: "",
-            text: "ch1",
-            options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
-            ]
-          },
-          {
-            value: "",
-            text: "ch0",
-            options: [
-              { value: "t", text: "standby" },
-              { value: "f", text: "enabled" }
-            ]
-          }
-        ]
+        text: "read All registers",
+        flags: []
       },
       {
         value: "HardReset",
