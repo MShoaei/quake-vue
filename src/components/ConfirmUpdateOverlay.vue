@@ -7,7 +7,9 @@ import Vue from "vue";
 export default Vue.extend({
   name: "ConfirmUpdateOverlay",
   props: ["overlay"],
-  data() {}
+  data() {
+    return {};
+  }
 });
 </script>
 
