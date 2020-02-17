@@ -1,9 +1,41 @@
 <template>
   <v-container>
     <Plotly :data="data" :layout="layout" :displayModeBar="true"></Plotly>
-    <v-btn width="100%" type="submit" color="primary" @click.prevent="stream"
-      >submit
-    </v-btn>
+    <v-form class="d-flex" id="form">
+      <v-row class="">
+        <v-col cols="6" md="4">
+          <v-text-field
+            label="File name"
+            v-model.trim="form.file"
+            autofocus
+            required
+          ></v-text-field>
+        </v-col>
+        <v-col cols="6" md="4">
+          <v-text-field
+            label="Delay (ms)"
+            v-model.number="form.skip"
+            required
+          ></v-text-field>
+        </v-col>
+        <v-col cols="6" md="4">
+          <v-text-field
+            label="Duration (ms)"
+            v-model.number="form.duration"
+            required
+          ></v-text-field>
+        </v-col>
+        <v-col cols="6" md="12">
+          <v-btn
+            width="100%"
+            type="submit"
+            color="primary"
+            @click.prevent="stream"
+            >submit
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-form>
   </v-container>
 </template>
 
@@ -19,6 +51,11 @@ export default {
   },
   data() {
     return {
+      form: {} as {
+        file: string;
+        skip: number;
+        duration: number;
+      },
       data: [
         {
           type: "scatter",
