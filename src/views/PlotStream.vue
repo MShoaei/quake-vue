@@ -83,8 +83,8 @@ export default {
             "ws://" + window.location.host + "/api/readlive"
           );
           conn.onmessage = (event: MessageEvent) => {
-            this.data.x.push(i);
-            this.data.y.push(parseInt(event.data.split(",")[0]));
+            this.data[0].x.push(i);
+            this.data[0].y.push(parseInt(event.data.split(",")[0]));
           };
           conn.onclose = () => {
             window.location.replace("/api/getfile");
