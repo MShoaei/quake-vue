@@ -63,7 +63,7 @@ export default {
           x: [],
 
           y: [],
-          marker: { color: "red" }
+          marker: { color: "blue" }
         }
       ],
       layout: {
@@ -85,6 +85,7 @@ export default {
           conn.onmessage = (event: MessageEvent) => {
             this.data[0].x.push(i);
             this.data[0].y.push(parseInt(event.data.split(",")[0]));
+            i++;
           };
           conn.onclose = () => {
             window.location.replace("/api/getfile");
