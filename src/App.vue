@@ -25,6 +25,14 @@
           Stream data
         </v-list-item-content>
       </v-list-item>
+      <v-list-item to="/plot" link>
+        <v-list-item-icon>
+          <v-icon>mdi-chart-scatter-plot</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          plot
+        </v-list-item-content>
+      </v-list-item>
       <v-list-item to="/about" link>
         <v-list-item-icon>
           <v-icon>mdi-information</v-icon>
