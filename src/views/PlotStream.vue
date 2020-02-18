@@ -1,6 +1,13 @@
 <template>
   <v-container>
-    <Plotly :data="data" :layout="layout" :displayModeBar="true"></Plotly>
+    <Plotly
+      :data="data"
+      :layout="layout"
+      :options="options"
+      displayModeBar="true"
+      autoResize="true"
+      watchShallow="true"
+    ></Plotly>
     <v-form class="d-flex" id="form">
       <v-row class="">
         <v-col cols="6" md="4">
@@ -70,6 +77,10 @@ export default {
         // width: 320,
         // height: 240,
         title: "A Fancy Plot"
+      },
+      options: {
+        showAxisDragHandles: true,
+        displaylogo: false
       }
     };
   },
