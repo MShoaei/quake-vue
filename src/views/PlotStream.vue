@@ -1,13 +1,6 @@
 <template>
   <v-container>
-    <Plotly
-      :data="data"
-      :layout="layout"
-      :options="options"
-      displayModeBar="true"
-      autoResize="true"
-      watchShallow="true"
-    ></Plotly>
+    <vue-plotly :data="data" :layout="layout" :options="options" />
     <v-form class="d-flex" id="form">
       <v-row class="">
         <v-col cols="6" md="4">
@@ -46,30 +39,24 @@
   </v-container>
 </template>
 
-<script lang="ts">
-import Plotly from "vue-plotly.js";
+<script>
+import VuePlotly from "@statnett/vue-plotly";
 import axios from "@/plugins/axios";
-import { AxiosError } from "axios";
 
 export default {
   name: "PlotStream",
   components: {
-    Plotly
+    VuePlotly
   },
   data() {
     return {
-      form: {} as {
-        file: string;
-        skip: number;
-        duration: number;
-      },
+      privateI: 1,
+      form: { file: "", skip: 0, duration: 0 },
       data: [
         {
-          type: "scatter",
-          mode: "lines+points",
           x: [],
-
           y: [],
+          type: "scatter",
           marker: { color: "blue" }
         }
       ],
@@ -78,33 +65,25 @@ export default {
         // height: 240,
         title: "A Fancy Plot"
       },
-      options: {
-        showAxisDragHandles: true,
-        displaylogo: false
-      }
+      options: { displayModeBar: true }
     };
   },
   methods: {
-    stream: function(this: any) {
+    stream: function() {
       let i = 1;
-      axios
-        .post("/api/readlive", JSON.stringify(this.form))
-        .then(() => {
-          let conn = new WebSocket(
-            "ws://" + window.location.host + "/api/readlive"
-          );
-          conn.onmessage = (event: MessageEvent) => {
-            this.data[0].x.push(i);
-            this.data[0].y.push(parseInt(event.data.split(",")[0]));
-            i++;
-          };
-          conn.onclose = () => {
-            window.location.replace("/api/getfile");
-          };
-        })
-        .catch((error: AxiosError<string>) => {
-          this.streamData = error;
-        });
+      axios.post("/api/readlive", JSON.stringify(this.form)).then(() => {
+        let conn = new WebSocket(
+          "ws://" + window.location.host + "/api/readlive"
+        );
+        conn.onmessage = event => {
+          this.data[0].x.push(i);
+          this.data[0].y.push(parseInt(event.data.split(",")[0]));
+          i++;
+        };
+        conn.onclose = () => {
+          window.location.replace("/api/getfile");
+        };
+      });
     }
   }
 };
