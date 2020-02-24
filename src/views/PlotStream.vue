@@ -83,7 +83,7 @@ export default {
           localY.push(parseInt(event.data.split(",")[0]));
           if (i % 500 === 0) {
             this.data[0].x.push(...localX.slice(i - 500));
-            this.data[0].y.push(localY.slice(i - 500));
+            this.data[0].y.push(...localY.slice(i - 500));
           }
           i++;
         };
