@@ -71,6 +71,8 @@ export default {
   methods: {
     stream: function() {
       let i = 1;
+      this.data[0].x = [];
+      this.data[0].y = [];
       let localX = [];
       let localY = [];
       axios.post("/api/readlive", JSON.stringify(this.form)).then(() => {
@@ -81,8 +83,8 @@ export default {
           localX.push(i);
           localY.push(parseInt(event.data.split(",")[0]));
           if (i % 500 === 0) {
-            this.data[0].x = localX.slice();
-            this.data[0].y = localY.slice();
+            this.data[0].x.push(...localX.slice(i - 500));
+            this.data[0].y.push(localY.slice(i - 500));
           }
           i++;
         };
