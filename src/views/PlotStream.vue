@@ -50,7 +50,6 @@ export default {
   },
   data() {
     return {
-      privateI: 1,
       form: { file: "", skip: 0, duration: 0 },
       data: [
         {
@@ -70,7 +69,7 @@ export default {
   },
   methods: {
     stream: function() {
-      let i = 1;
+      let i = 0;
       this.data[0].x = [];
       this.data[0].y = [];
       let localX = [];
