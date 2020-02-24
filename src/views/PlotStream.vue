@@ -71,13 +71,19 @@ export default {
   methods: {
     stream: function() {
       let i = 1;
+      let localX = [];
+      let localY = [];
       axios.post("/api/readlive", JSON.stringify(this.form)).then(() => {
         let conn = new WebSocket(
           "ws://" + window.location.host + "/api/readlive"
         );
         conn.onmessage = event => {
-          this.data[0].x.push(i);
-          this.data[0].y.push(parseInt(event.data.split(",")[0]));
+          localX.push(i);
+          localY.push(parseInt(event.data.split(",")[0]));
+          if (i % 200 === 0) {
+            this.data[0].x = localX;
+            this.data[0].y = localY;
+          }
           i++;
         };
         conn.onclose = () => {
