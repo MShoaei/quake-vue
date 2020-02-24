@@ -80,7 +80,7 @@ export default {
         conn.onmessage = event => {
           localX.push(i);
           localY.push(parseInt(event.data.split(",")[0]));
-          if (i % 200 === 0) {
+          if (i % 500 === 0) {
             this.data[0].x = localX.slice();
             this.data[0].y = localY.slice();
           }
