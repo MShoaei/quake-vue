@@ -3,7 +3,7 @@
     <vue-plotly :data="data" :layout="layout" :options="options" />
     <v-form class="d-flex" id="form">
       <v-row class="">
-        <v-col cols="6" md="4">
+        <v-col cols="6" md="3">
           <v-text-field
             label="File name"
             v-model.trim="form.file"
@@ -11,21 +11,28 @@
             required
           ></v-text-field>
         </v-col>
-        <v-col cols="6" md="4">
+        <v-col cols="6" md="3">
           <v-text-field
-            label="Delay (ms)"
+            label="skip (# of packets)"
             v-model.number="form.skip"
             required
           ></v-text-field>
         </v-col>
-        <v-col cols="6" md="4">
+        <v-col cols="6" md="3">
+          <v-text-field
+            label="update every (# of packets)"
+            v-model.number="form.duration"
+            required
+          ></v-text-field>
+        </v-col>
+        <v-col cols="6" md="3">
           <v-text-field
             label="Duration (ms)"
             v-model.number="form.duration"
             required
           ></v-text-field>
         </v-col>
-        <v-col cols="6" md="12">
+        <v-col cols="12">
           <v-btn
             width="100%"
             type="submit"
@@ -50,6 +57,7 @@ export default {
   },
   data() {
     return {
+      i: 0,
       form: { file: "", skip: 0, duration: 0 },
       data: [
         {
@@ -69,7 +77,7 @@ export default {
   },
   methods: {
     stream: function() {
-      let i = 0;
+      this.i = 0;
       this.data[0].x = [];
       this.data[0].y = [];
       let localX = [];
@@ -79,11 +87,11 @@ export default {
           "ws://" + window.location.host + "/api/readlive"
         );
         conn.onmessage = event => {
-          localX.push(i);
+          localX.push(this.i);
           localY.push(parseInt(event.data.split(",")[0]));
           if (i % 500 === 0) {
-            this.data[0].x.push(...localX.slice(i - 500));
-            this.data[0].y.push(...localY.slice(i - 500));
+            this.data[0].x.push(...localX.slice(this.i - 500));
+            this.data[0].y.push(...localY.slice(this.i - 500));
           }
           i++;
         };
