@@ -21,7 +21,7 @@
         <v-col cols="6" md="3">
           <v-text-field
             label="update every (# of packets)"
-            v-model.number="form.duration"
+            v-model.number="delay"
             required
           ></v-text-field>
         </v-col>
@@ -58,7 +58,8 @@ export default {
   data() {
     return {
       i: 0,
-      form: { file: "", skip: 0, duration: 0 },
+      delay: 1,
+      form: { file: "", skip: 1, duration: 1000 },
       data: [
         {
           x: [],
@@ -89,11 +90,11 @@ export default {
         conn.onmessage = event => {
           localX.push(this.i);
           localY.push(parseInt(event.data.split(",")[0]));
-          if (i % 500 === 0) {
+          if (this.i % this.delay === 0) {
             this.data[0].x.push(...localX.slice(this.i - 500));
             this.data[0].y.push(...localY.slice(this.i - 500));
           }
-          i++;
+          this.i++;
         };
         conn.onclose = () => {
           window.location.replace("/api/getfile");
