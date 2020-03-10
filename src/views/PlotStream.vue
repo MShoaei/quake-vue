@@ -91,8 +91,8 @@ export default {
           localX.push(this.i);
           localY.push(parseInt(event.data.split(",")[0]));
           if (this.i % this.delay === 0) {
-            this.data[0].x.push(...localX.slice(this.i - 500));
-            this.data[0].y.push(...localY.slice(this.i - 500));
+            this.data[0].x.push(...localX.slice(this.i - this.delay));
+            this.data[0].y.push(...localY.slice(this.i - this.delay));
           }
           this.i++;
         };
