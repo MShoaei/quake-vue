@@ -4,8 +4,7 @@
   </div>
 </template>
 
-<script lang="ts">
-// @ is an alias to /src
+<script>
 import CommandForm from "@/components/CommandForm.vue";
 
 export default {

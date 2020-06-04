@@ -13,46 +13,37 @@
         <v-list-item-icon>
           <v-icon>mdi-home</v-icon>
         </v-list-item-icon>
-        <v-list-item-content>
-          Home
-        </v-list-item-content>
+        <v-list-item-content>Home</v-list-item-content>
       </v-list-item>
       <v-list-item to="/stream" link>
         <v-list-item-icon>
           <v-icon>mdi-view-stream</v-icon>
         </v-list-item-icon>
-        <v-list-item-content>
-          Stream data
-        </v-list-item-content>
+        <v-list-item-content>Stream data</v-list-item-content>
       </v-list-item>
       <v-list-item to="/plot" link>
         <v-list-item-icon>
           <v-icon>mdi-chart-scatter-plot</v-icon>
         </v-list-item-icon>
-        <v-list-item-content>
-          plot
-        </v-list-item-content>
+        <v-list-item-content>plot</v-list-item-content>
       </v-list-item>
       <v-list-item to="/about" link>
         <v-list-item-icon>
           <v-icon>mdi-information</v-icon>
         </v-list-item-icon>
-        <v-list-item-content>
-          About
-        </v-list-item-content>
+        <v-list-item-content>About</v-list-item-content>
       </v-list-item>
     </v-navigation-drawer>
     <v-content>
       <ConfirmUpdateOverlay :overlay="overlay" />
       <router-view />
-      <!--      <CommandForm />-->
     </v-content>
   </v-app>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
-import ConfirmUpdateOverlay from "@/components/ConfirmUpdateOverlay.vue";
+import ConfirmUpdateOverlay from "@/components/ConfirmUpdateOverlay";
 
 export default Vue.extend({
   name: "App",
