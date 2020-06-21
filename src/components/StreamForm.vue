@@ -24,7 +24,7 @@
         </v-col>
         <v-col cols="6" md="4">
           <v-text-field
-            label="Delay (ms)"
+            label="Delay (# of packets)"
             v-model.number="form.skip"
             required
           ></v-text-field>
