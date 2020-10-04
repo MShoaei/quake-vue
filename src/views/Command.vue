@@ -1,14 +1,12 @@
 <template>
-  <div class="home">
-    <CommandForm />
-  </div>
+  <CommandForm />
 </template>
 
 <script>
 import CommandForm from "@/components/CommandForm.vue";
 
 export default {
-  name: "home",
+  name: "Command",
   components: {
     CommandForm
   }
