@@ -1,15 +1,12 @@
 <template>
-  <div class="home">
-    <CommandForm />
-  </div>
+  <CommandForm />
 </template>
 
-<script lang="ts">
-// @ is an alias to /src
+<script>
 import CommandForm from "@/components/CommandForm.vue";
 
 export default {
-  name: "home",
+  name: "Command",
   components: {
     CommandForm
   }

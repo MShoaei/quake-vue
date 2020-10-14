@@ -13,7 +13,7 @@
       </v-col>
     </v-row>
     <v-form class="d-flex" id="form">
-      <v-row class="">
+      <v-row class>
         <v-col cols="6" md="4">
           <v-text-field
             label="File name"
@@ -24,7 +24,7 @@
         </v-col>
         <v-col cols="6" md="4">
           <v-text-field
-            label="Delay (ms)"
+            label="Delay (# of packets)"
             v-model.number="form.skip"
             required
           ></v-text-field>
@@ -42,53 +42,53 @@
             type="submit"
             color="primary"
             @click.prevent="stream"
-            >submit
-          </v-btn>
+            >submit</v-btn
+          >
         </v-col>
       </v-row>
     </v-form>
   </v-container>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
 import axios from "@/plugins/axios";
-import { AxiosError } from "axios";
 
 export default Vue.extend({
   name: "StreamForm",
   data() {
     return {
-      form: {} as {
-        file: string;
-        skip: number;
-        duration: number;
-      },
+      form: {},
+      // as {
+      //   file: string;
+      //   skip: number;
+      //   duration: number;
+      // },
       streamData: "",
       count: 0
     };
   },
   methods: {
-    stream: function(this: any) {
-      let streamArea = document.getElementById("streamArea") as HTMLElement;
+    stream: function() {
+      let streamArea = document.getElementById("streamArea");
       axios
         .post("/api/readlive", JSON.stringify(this.form))
         .then(() => {
           let conn = new WebSocket(
             "ws://" + window.location.host + "/api/readlive"
           );
-          conn.onmessage = (event: MessageEvent) => {
+          conn.onmessage = event => {
             this.streamData += event.data + "\n";
             streamArea.scrollTop = streamArea.scrollHeight;
           };
-          conn.onclose = (event: CloseEvent) => {
+          conn.onclose = event => {
             this.streamData += "connection closed\n";
             this.streamData += event.code + "\n";
             streamArea.scrollTop = streamArea.scrollHeight;
             window.location.replace("/api/getfile");
           };
         })
-        .catch((error: AxiosError<string>) => {
+        .catch(error => {
           this.streamData = error;
         });
     }

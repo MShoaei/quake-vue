@@ -2,7 +2,7 @@
   <v-overlay :value="overlay"> </v-overlay>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
 export default Vue.extend({
   name: "ConfirmUpdateOverlay",

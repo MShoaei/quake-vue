@@ -63,9 +63,8 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
-import { AxiosResponse, AxiosError } from "axios";
 import axios from "@/plugins/axios";
 
 export default Vue.extend({
@@ -78,22 +77,18 @@ export default Vue.extend({
       this.loading = true;
       axios
         .post("/api/command", JSON.stringify(this.finalData))
-        .then(
-          (
-            response: AxiosResponse<{ message: string; tx: string; rx: string }>
-          ) => {
-            // console.log(response.data);
-            this.commandResponse =
-              response.data.message +
-              " " +
-              "tx: " +
-              response.data.tx +
-              " rx: " +
-              response.data.rx;
-            this.errorResponse = false;
-          }
-        )
-        .catch((error: AxiosError<string>) => {
+        .then(response => {
+          // console.log(response.data);
+          this.commandResponse =
+            response.data.message +
+            " " +
+            "tx: " +
+            response.data.tx +
+            " rx: " +
+            response.data.rx;
+          this.errorResponse = false;
+        })
+        .catch(error => {
           // console.log(error);
           this.commandResponse = error.message;
           this.errorResponse = true;
@@ -102,20 +97,21 @@ export default Vue.extend({
     },
 
     updateFlagsList: function() {
-      let cmd:
-        | {
-            value: string;
-            text: string;
-            flags: {
-              value: string;
-              text: string;
-              options: {
-                value: string;
-                text: string;
-              }[];
-            }[];
-          }
-        | undefined;
+      // let cmd:
+      //   | {
+      //       value: string;
+      //       text: string;
+      //       flags: {
+      //         value: string;
+      //         text: string;
+      //         options: {
+      //           value: string;
+      //           text: string;
+      //         }[];
+      //       }[];
+      //     }
+      //   | undefined;
+      let cmd = {};
       const i = this.Commands.findIndex(
         f => f.value === this.finalData.Command
       );
@@ -143,19 +139,21 @@ export default Vue.extend({
     errorResponse: false,
     variableInput: false,
 
-    finalData: { Command: "", Flags: [] } as {
-      Command: string;
-      Flags: { Name: string; Value: string }[];
-    },
+    finalData: { Command: "", Flags: [] },
+    // as {
+    //   Command: string;
+    //   Flags: { Name: string; Value: string }[];
+    // }
 
-    selectedFlags: [] as {
-      value: string;
-      text: string;
-      options: {
-        value: string;
-        text: string;
-      }[];
-    }[],
+    selectedFlags: [],
+    // as {
+    //   value: string;
+    //   text: string;
+    //   options: {
+    //     value: string;
+    //     text: string;
+    //   }[];
+    // }[],
 
     Commands: [
       {
