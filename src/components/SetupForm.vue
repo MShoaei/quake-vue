@@ -186,7 +186,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-container>
+    <div>
       <v-form @submit.prevent="setupDevice">
         <v-row>
           <v-col cols="6" lg="3">
@@ -241,7 +241,7 @@
           >Start</v-btn
         >
       </v-form>
-    </v-container>
+    </div>
   </div>
 </template>
 
@@ -670,9 +670,7 @@ export default {
         .then(() => {
           this.samplingCompleteDialog = true;
         })
-        .catch(err => {
-          console.log(err);
-        });
+        .catch();
       this.loading = false;
     },
     selectAll: function() {
