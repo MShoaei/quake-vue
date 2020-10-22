@@ -5,13 +5,8 @@
 </template>
 
 <script>
-import VuePlotly from "@statnett/vue-plotly";
 import axios from "@/plugins/axios";
-
-// eslint-disable-next-line no-unused-vars
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+import VuePlotly from "@statnett/vue-plotly";
 
 export default {
   name: "PlotStream",
@@ -210,8 +205,6 @@ export default {
       axios
         .post("/api/readlive", JSON.stringify(this.form))
         .then(resp => {
-          console.log(resp.data.size);
-
           let size = resp.data.size;
           this.i = 0;
           for (let i = 0; i < this.data.length; i++) {
@@ -253,10 +246,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-html,
-body,
-#plot {
-  height: 100%;
-}
-</style>
+<style lang="scss" scoped></style>
