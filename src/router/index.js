@@ -1,38 +1,22 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import StreamForm from "@/components/StreamForm.vue";
-import PlotStream from "@/views/PlotStream.vue";
-import LoginForm from "@/components/LoginForm.vue";
-import Command from "@/views/Command.vue";
-import Setup from "@/views/Setup.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/setup",
-    name: "setup",
-    component: Setup
-  },
-  {
-    path: "/command",
-    name: "command",
-    component: Command
-  },
-  {
-    path: "/login",
-    name: "login",
-    component: LoginForm
-  },
-  {
-    path: "/stream",
-    name: "stream",
-    component: StreamForm
-  },
-  {
     path: "/plot",
     name: "plot",
-    component: PlotStream
+    // component: PlotStream
+    component: () =>
+      import(/* webpackChunkName: "plot" */ "../views/PlotStream.vue")
+  },
+  {
+    path: "/setup",
+    name: "setup",
+    // component: Setup
+    component: () =>
+      import(/* webpackChunkName: "setup" */ "../views/Setup.vue")
   },
   {
     path: "/about",
