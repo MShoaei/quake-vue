@@ -164,8 +164,7 @@
           <v-icon size="75" color="green">mdi-check-circle</v-icon>
         </v-card-title>
         <v-card-text
-          >Let Google help apps determine location. This means sending anonymous
-          location data to Google, even when no apps are running.</v-card-text
+          >Sampling is done. Do you want to see the plot?</v-card-text
         >
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -174,14 +173,10 @@
             text
             @click="samplingCompleteDialog = false"
           >
-            Disagree
+            No
           </v-btn>
-          <v-btn
-            color="green darken-1"
-            text
-            @click="samplingCompleteDialog = false"
-          >
-            Agree
+          <v-btn color="green darken-1" text @click.prevent="showPlot">
+            Yes
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -246,7 +241,9 @@
 </template>
 
 <script>
-import axios from "@/plugins/axios";
+import axios from "axios";
+import router from "@/router";
+import PlotStream from "@/views/PlotStream";
 
 export default {
   name: "SetupForm",
@@ -655,6 +652,8 @@ export default {
       }
     ],
     formData: {
+      channels: [],
+      gains: [],
       startMode: "asap",
       recordTime: 32,
       samplingTime: 16,
@@ -666,7 +665,8 @@ export default {
     setupDevice: function() {
       this.loading = true;
       axios
-        .post("/api/setup", JSON.stringify(this.formData))
+        .create({ timeout: 1200000 })
+        .post("/api/setup", this.formData)
         .then(() => {
           this.samplingCompleteDialog = true;
         })
@@ -698,6 +698,20 @@ export default {
         }
       });
       this.$set(this.gains[channel], key, true);
+    },
+    showPlot: function() {
+      router.push({
+        path: "/plot",
+        component: PlotStream,
+        query: {
+          file:
+            (this.formData.projectName === "/"
+              ? ""
+              : this.formData.projectName) +
+            "/" +
+            this.formData.fileName
+        }
+      });
     }
   }
 };

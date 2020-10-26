@@ -5,8 +5,9 @@
 </template>
 
 <script>
-import axios from "@/plugins/axios";
 import VuePlotly from "@statnett/vue-plotly";
+import axios from "@/plugins/axios";
+import router from "@/router";
 
 export default {
   name: "PlotStream",
@@ -18,11 +19,7 @@ export default {
       i: 0,
       delay: 1,
       globalY: [],
-      form: {
-        file: "",
-        skip: 1,
-        duration: 1000
-      },
+      form: router.currentRoute.query,
       data: [
         {
           y: this.globalY,
@@ -200,48 +197,49 @@ export default {
       }
     };
   },
-  methods: {
-    stream: async function() {
-      axios
-        .post("/api/readlive", JSON.stringify(this.form))
-        .then(resp => {
-          let size = resp.data.size;
-          this.i = 0;
-          for (let i = 0; i < this.data.length; i++) {
-            this.data[i].x = Array(size);
-            for (let j = 0; j < size; j++) {
-              this.data[i].x[j] = j * 50000;
-            }
+  mounted() {
+    return axios
+      .post("/api/plot", this.form)
+      .then(resp => {
+        let size = resp.data.size;
+        this.i = 0;
+        for (let i = 0; i < this.data.length; i++) {
+          this.data[i].x = Array(size);
+          for (let j = 0; j < size; j++) {
+            this.data[i].x[j] = j * 50000;
           }
+        }
 
-          this.data.globalY = Array(size);
-          for (let i = 0; i < size; i++) {
-            this.data.globalY[i] = i;
+        this.data.globalY = Array(size);
+        for (let i = 0; i < size; i++) {
+          this.data.globalY[i] = i;
+        }
+      })
+      .then(() => {
+        let conn = new WebSocket(
+          "ws://" +
+            window.location.host +
+            "/api/plot?file=" +
+            router.currentRoute.query.file
+        );
+        conn.binaryType = "arraybuffer";
+        conn.onmessage = event => {
+          let view = new Int32Array(event.data);
+          for (let i = 0; i < this.data.length; i++) {
+            this.data[i].x[this.i] = view[i] + i * 50000;
           }
-        })
-        .then(() => {
-          let conn = new WebSocket(
-            "ws://" + window.location.host + "/readlive"
+          this.i++;
+        };
+        conn.onclose = () => {
+          this.$set(this.layout.yaxis.range, 0, this.globalY.length + 20);
+          // this.$set(this.layout.yaxis.range, 1, -10);
+          this.$set(
+            this.data[this.data.length - 1].x,
+            this.i,
+            50000 * this.data.length
           );
-          conn.binaryType = "arraybuffer";
-          conn.onmessage = event => {
-            let view = new Int32Array(event.data);
-            for (let i = 0; i < this.data.length; i++) {
-              this.data[i].x[this.i] = view[i] + i * 50000;
-            }
-            this.i++;
-          };
-          conn.onclose = () => {
-            this.$set(this.layout.yaxis.range, 0, this.globalY.length + 20);
-            // this.$set(this.layout.yaxis.range, 1, -10);
-            this.$set(
-              this.data[this.data.length - 1].x,
-              this.i,
-              50000 * this.data.length
-            );
-          };
-        });
-    }
+        };
+      });
   }
 };
 </script>
