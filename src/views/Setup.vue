@@ -5,7 +5,7 @@
       <v-col cols="12">
         <v-card class="mt-5">
           <v-card-title class="primary white--text headline">
-            User Directory
+            Data Directory
           </v-card-title>
           <v-treeview
             v-if="items[0].children.length > 0"
@@ -27,8 +27,6 @@
 <script>
 import SetupForm from "@/components/SetupForm";
 import axios from "@/plugins/axios";
-
-const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export default {
   name: "Setup",
@@ -76,8 +74,6 @@ export default {
   }),
   methods: {
     async fetchDir(item) {
-      await pause(1500);
-
       return axios
         .get("/api/tree" + item.dirPath)
         .then(resp => {
@@ -86,7 +82,7 @@ export default {
             if (respItem.dir) {
               item.children.push({
                 id: this.currentID.toString(),
-                dirPath: resp.data.directory + respItem.name,
+                dirPath: resp.data.directory + "/" + respItem.name,
                 name: respItem.name,
                 children: []
               });
