@@ -73,10 +73,9 @@ export default Vue.extend({
   computed: {},
   methods: {
     submitForm: function() {
-      // console.log(JSON.stringify(this.finalData));
       this.loading = true;
       axios
-        .post("/api/command", JSON.stringify(this.finalData))
+        .post("/api/command", this.finalData)
         .then(response => {
           // console.log(response.data);
           this.commandResponse =
