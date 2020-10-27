@@ -1,5 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import Command from "@/views/Command";
+import Setup from "@/views/Setup";
 
 Vue.use(VueRouter);
 
@@ -14,14 +16,15 @@ const routes = [
   {
     path: "/command",
     name: "command",
-    component: import(/* webpackChunkName: "command" */ "../views/Command.vue")
+    component: Command
+    // component: import(/* webpackChunkName: "command" */ "../views/Command.vue")
   },
   {
     path: "/setup",
     name: "setup",
-    // component: Setup
-    component: () =>
-      import(/* webpackChunkName: "setup" */ "../views/Setup.vue")
+    component: Setup
+    // component: () =>
+    //   import(/* webpackChunkName: "setup" */ "../views/Setup.vue")
   },
   {
     path: "/about",
