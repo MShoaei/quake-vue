@@ -4,6 +4,12 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" color="white" fixed light temporary>
+      <v-list-item link to="/command">
+        <v-list-item-icon>
+          <v-icon></v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>Command</v-list-item-content>
+      </v-list-item>
       <v-list-item link to="/setup">
         <v-list-item-icon>
           <v-icon>mdi-cog-outline</v-icon>
