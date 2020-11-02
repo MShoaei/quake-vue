@@ -4,7 +4,13 @@
       <v-form
         :key="index"
         @submit.prevent="
-          submitForm(c.value, selectedADC[index], Commands[index].postData)
+          c.value === 'ChStandby' || c.value === 'ChModeSel'
+            ? submitChCommand(
+                c.value,
+                selectedADC[index],
+                Commands[index].postData
+              )
+            : submitForm(c.value, selectedADC[index], Commands[index].postData)
         "
       >
         <v-row>
@@ -78,6 +84,16 @@ export default Vue.extend({
           this.errorResponse = true;
         });
       this.loading = false;
+    },
+    submitChCommand: function(command, adc, data) {
+      let channels = [true, true, true, true, true, true, true, true];
+      for (let i = 0; i < 8; i++) {
+        channels[i] = data["ch" + i.toString()];
+      }
+      this.submitForm(command, adc, {
+        write: data.write,
+        channels: channels
+      });
     }
   },
   data: () => ({
@@ -545,7 +561,16 @@ export default Vue.extend({
           {
             value: "Channel",
             text: "Channel",
-            options: [{ value: 0, text: "Channel" }]
+            options: [
+              { value: 0, text: "Channel 0" },
+              { value: 0, text: "Channel 1" },
+              { value: 0, text: "Channel 2" },
+              { value: 0, text: "Channel 3" },
+              { value: 0, text: "Channel 4" },
+              { value: 0, text: "Channel 5" },
+              { value: 0, text: "Channel 6" },
+              { value: 0, text: "Channel 7" }
+            ]
           },
           {
             value: "MSB",
