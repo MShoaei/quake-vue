@@ -197,8 +197,8 @@ export default {
       }
     };
   },
-  mounted() {
-    return axios
+  mounted: function() {
+    axios
       .post("/api/plot", this.form)
       .then(resp => {
         let size = resp.data.size;
@@ -232,7 +232,6 @@ export default {
         };
         conn.onclose = () => {
           this.$set(this.layout.yaxis.range, 0, this.globalY.length + 20);
-          // this.$set(this.layout.yaxis.range, 1, -10);
           this.$set(
             this.data[this.data.length - 1].x,
             this.i,

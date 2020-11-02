@@ -8,7 +8,7 @@
         <v-list-item-icon>
           <v-icon></v-icon>
         </v-list-item-icon>
-        <v-list-item-content>Command</v-list-item-content>
+        <v-list-item-content>Commands</v-list-item-content>
       </v-list-item>
       <v-list-item link to="/setup">
         <v-list-item-icon>
