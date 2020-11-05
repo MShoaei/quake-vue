@@ -240,7 +240,8 @@ export default Vue.extend({
               { value: 1024, text: "x1024" }
             ]
           }
-        ]
+        ],
+        postData: {}
       },
       {
         value: "ChModeB",
@@ -274,7 +275,8 @@ export default Vue.extend({
               { value: 1024, text: "x1024" }
             ]
           }
-        ]
+        ],
+        postData: {}
       },
       {
         value: "ChModeSel",
@@ -352,7 +354,8 @@ export default Vue.extend({
               { value: 1, text: "Mode B" }
             ]
           }
-        ]
+        ],
+        postData: {}
       },
       {
         value: "PowerMode",
@@ -400,7 +403,8 @@ export default Vue.extend({
               { value: 3, text: "MCLK/4" }
             ]
           }
-        ]
+        ],
+        postData: {}
       },
       {
         value: "GeneralConf",
@@ -440,7 +444,8 @@ export default Vue.extend({
               { value: 3, text: "2.14 V" }
             ]
           }
-        ]
+        ],
+        postData: {}
       },
       {
         value: "DataControl",
@@ -470,7 +475,8 @@ export default Vue.extend({
               { value: 1, text: "enabled" }
             ]
           }
-        ]
+        ],
+        postData: {}
       },
       {
         value: "InterfaceConf",
@@ -503,7 +509,8 @@ export default Vue.extend({
               { value: 3, text: "No division" }
             ]
           }
-        ]
+        ],
+        postData: {}
       },
       {
         value: "BISTControl",
@@ -525,7 +532,8 @@ export default Vue.extend({
               { value: 1, text: "Begin" }
             ]
           }
-        ]
+        ],
+        postData: {}
       },
       {
         value: "DeviceStatus",
@@ -539,7 +547,8 @@ export default Vue.extend({
               { value: false, text: "read" }
             ]
           }
-        ]
+        ],
+        postData: {}
       },
       {
         value: "RevisionID",
@@ -587,7 +596,8 @@ export default Vue.extend({
             text: "LSB register",
             options: [{ value: 0, text: "LSB value" }]
           }
-        ]
+        ],
+        postData: {}
       },
       {
         value: "ChGain",
@@ -621,7 +631,8 @@ export default Vue.extend({
             text: "LSB register",
             options: [{ value: 0, text: "LSB value" }]
           }
-        ]
+        ],
+        postData: {}
       },
       {
         value: "ChSyncOffset",
@@ -645,7 +656,8 @@ export default Vue.extend({
             text: "offset register",
             options: [{ value: "1", text: "offset value" }]
           }
-        ]
+        ],
+        postData: {}
       },
       {
         value: "HardReset",
