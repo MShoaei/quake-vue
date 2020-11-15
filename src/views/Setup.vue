@@ -35,7 +35,7 @@ export default {
   },
   mounted() {
     axios
-      .get("/api/tree")
+      .get("/api/tree/")
       .then(resp => {
         for (const item of resp.data.items) {
           this.currentID++;
