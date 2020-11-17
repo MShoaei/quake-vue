@@ -72,6 +72,12 @@
                       <td>{{ item.channel }}</td>
                       <td>
                         <v-checkbox
+                          v-model="item.g0"
+                          @change="selectChannelGain(item.channel, 'g0')"
+                        ></v-checkbox>
+                      </td>
+                      <td>
+                        <v-checkbox
                           v-model="item.g2"
                           @change="selectChannelGain(item.channel, 'g2')"
                         ></v-checkbox>
@@ -306,6 +312,7 @@ export default {
         sortable: false,
         value: "channel"
       },
+      { text: "0", sortable: false, value: "g0" },
       { text: "2", sortable: false, value: "g2" },
       { text: "10", sortable: false, value: "g10" },
       { text: "20", sortable: false, value: "g20" },
@@ -321,6 +328,7 @@ export default {
     gains: [
       {
         channel: "All",
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -335,6 +343,7 @@ export default {
       },
       {
         channel: 1,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -349,6 +358,7 @@ export default {
       },
       {
         channel: 2,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -363,6 +373,7 @@ export default {
       },
       {
         channel: 3,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -377,6 +388,7 @@ export default {
       },
       {
         channel: 4,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -391,6 +403,7 @@ export default {
       },
       {
         channel: 5,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -405,6 +418,7 @@ export default {
       },
       {
         channel: 6,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -419,6 +433,7 @@ export default {
       },
       {
         channel: 7,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -433,6 +448,7 @@ export default {
       },
       {
         channel: 8,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -447,6 +463,7 @@ export default {
       },
       {
         channel: 9,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -461,6 +478,7 @@ export default {
       },
       {
         channel: 10,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -475,6 +493,7 @@ export default {
       },
       {
         channel: 11,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -489,6 +508,7 @@ export default {
       },
       {
         channel: 12,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -503,6 +523,7 @@ export default {
       },
       {
         channel: 13,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -517,6 +538,7 @@ export default {
       },
       {
         channel: 14,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -531,6 +553,7 @@ export default {
       },
       {
         channel: 15,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -545,6 +568,7 @@ export default {
       },
       {
         channel: 16,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -559,6 +583,7 @@ export default {
       },
       {
         channel: 17,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -573,6 +598,7 @@ export default {
       },
       {
         channel: 18,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -587,6 +613,7 @@ export default {
       },
       {
         channel: 19,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -601,6 +628,7 @@ export default {
       },
       {
         channel: 20,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -615,6 +643,7 @@ export default {
       },
       {
         channel: 21,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -629,6 +658,7 @@ export default {
       },
       {
         channel: 22,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -643,6 +673,7 @@ export default {
       },
       {
         channel: 23,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -657,6 +688,7 @@ export default {
       },
       {
         channel: 24,
+        g0: false,
         g2: false,
         g10: false,
         g20: false,
@@ -756,9 +788,23 @@ export default {
       });
     },
     setGains: function() {
-      this.channelDialog = false;
-      axios.post("/api/gains", this.gains).then(resp => {
+      let gains = new Array(24);
+      for (let i = 0; i < gains.length; i++) {
+        gains[i] = 0;
+      }
+      for (let i = 0; i < 24; i++) {
+        Object.keys(this.gains[i + 1]).forEach(value => {
+          if (
+            typeof this.gains[i + 1][value] === "boolean" &&
+            this.gains[i + 1][value] === true
+          ) {
+            gains[i] = parseInt(value.slice(1));
+          }
+        });
+      }
+      axios.post("/api/gains", gains).then(resp => {
         console.log(resp.data);
+        this.gainDialog = false;
       });
     }
   },
