@@ -146,7 +146,7 @@
                 :block="$vuetify.breakpoint.xsOnly"
                 class="mt-2"
                 color="success"
-                @click="gainDialog = false"
+                @click="setGains"
                 >OK
               </v-btn>
             </v-row>
@@ -754,12 +754,18 @@ export default {
       axios.post("/api/channels", this.channels).then(resp => {
         console.log(resp.data);
       });
+    },
+    setGains: function() {
+      this.channelDialog = false;
+      axios.post("/api/gains", this.gains).then(resp => {
+        console.log(resp.data);
+      });
     }
   },
   mounted: function() {
     axios.get("/api/channels").then(resp => {
       console.log(resp.data);
-      this.channels = resp.data.rx;
+      // this.channels = resp.data.rx;
     });
   }
 };
