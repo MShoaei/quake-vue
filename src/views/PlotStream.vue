@@ -206,7 +206,7 @@ export default {
         for (let i = 0; i < this.data.length; i++) {
           this.data[i].x = Array(size);
           for (let j = 0; j < size; j++) {
-            this.data[i].x[j] = j * 50000;
+            this.data[i].x[j] = j * 200000;
           }
         }
 
