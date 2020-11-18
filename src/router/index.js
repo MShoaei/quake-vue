@@ -14,6 +14,12 @@ const routes = [
       import(/* webpackChunkName: "plot" */ "../views/PlotStream.vue")
   },
   {
+    path: "/info",
+    name: "info",
+    // component: Info
+    component: () => import(/* webpackChunkName: "info" */ "../views/Info.vue")
+  },
+  {
     path: "/command",
     name: "command",
     component: Command
