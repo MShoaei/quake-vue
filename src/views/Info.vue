@@ -8,76 +8,74 @@
     </v-row>
     <v-row>
       <v-col>Channel 1</v-col>
-      <v-col>{{ sensors[0].voltage[0] }}</v-col>
-      <v-col>{{ sensors[0].current[0] }}</v-col>
+      <v-col>{{ sensor0.voltage.ch1 }}</v-col>
+      <v-col>{{ sensor0.current.ch1 }}</v-col>
       <v-col></v-col>
     </v-row>
     <v-row>
       <v-col>Channel 2</v-col>
-      <v-col>{{ sensors[0].voltage[1] }}</v-col>
-      <v-col>{{ sensors[0].current[1] }}</v-col>
+      <v-col>{{ sensor0.voltage.ch2 }}</v-col>
+      <v-col>{{ sensor0.current.ch2 }}</v-col>
       <v-col></v-col>
     </v-row>
     <v-row>
       <v-col>Channel 3</v-col>
-      <v-col>{{ sensors[0].voltage[2] }}</v-col>
-      <v-col>{{ sensors[0].current[2] }}</v-col>
+      <v-col>{{ sensor0.voltage.ch3 }}</v-col>
+      <v-col>{{ sensor0.current.ch3 }}</v-col>
       <v-col></v-col>
     </v-row>
     <v-row>
       <v-col>Channel 4</v-col>
-      <v-col>{{ sensors[1].voltage[0] }}</v-col>
-      <v-col>{{ sensors[1].current[0] }}</v-col>
+      <v-col>{{ sensor1.voltage.ch1 }}</v-col>
+      <v-col>{{ sensor1.current.ch1 }}</v-col>
       <v-col></v-col>
     </v-row>
     <v-row>
       <v-col>Channel 5</v-col>
-      <v-col>{{ sensors[1].voltage[1] }}</v-col>
-      <v-col>{{ sensors[1].current[1] }}</v-col>
+      <v-col>{{ sensor1.voltage.ch2 }}</v-col>
+      <v-col>{{ sensor1.current.ch2 }}</v-col>
       <v-col></v-col>
     </v-row>
     <v-row>
       <v-col>Channel 6</v-col>
-      <v-col>{{ sensors[1].voltage[2] }}</v-col>
-      <v-col>{{ sensors[1].current[2] }}</v-col>
+      <v-col>{{ sensor1.voltage.ch3 }}</v-col>
+      <v-col>{{ sensor1.current.ch3 }}</v-col>
       <v-col></v-col>
     </v-row>
     <v-row>
       <v-col>Channel 7</v-col>
-      <v-col>{{ sensors[2].voltage[0] }}</v-col>
-      <v-col>{{ sensors[2].current[0] }}</v-col>
+      <v-col>{{ sensor2.voltage.ch1 }}</v-col>
+      <v-col>{{ sensor2.current.ch1 }}</v-col>
       <v-col></v-col>
     </v-row>
     <v-row>
       <v-col>Channel 8</v-col>
-      <v-col>{{ sensors[2].voltage[1] }}</v-col>
-      <v-col>{{ sensors[2].current[1] }}</v-col>
+      <v-col>{{ sensor2.voltage.ch2 }}</v-col>
+      <v-col>{{ sensor2.current.ch2 }}</v-col>
       <v-col></v-col>
     </v-row>
     <v-row>
       <v-col>Channel 9</v-col>
-      <v-col>{{ sensors[2].voltage[2] }}</v-col>
-      <v-col>{{ sensors[2].current[2] }}</v-col>
+      <v-col>{{ sensor2.voltage.ch3 }}</v-col>
+      <v-col>{{ sensor2.current.ch3 }}</v-col>
       <v-col></v-col>
     </v-row>
     <v-row>
       <v-col>Channel 10</v-col>
-      <v-col>{{ sensors[3].voltage[0] }}</v-col>
-      <v-col>{{ sensors[3].current[0] }}</v-col>
+      <v-col>{{ sensor3.voltage.ch1 }}</v-col>
+      <v-col>{{ sensor3.current.ch1 }}</v-col>
       <v-col></v-col>
     </v-row>
     <v-row>
       <v-col>Channel 11</v-col>
-      <v-col>{{ sensors[3].voltage[1] }}</v-col>
-      <v-col>{{ sensors[3].current[1] }}</v-col>
+      <v-col>{{ sensor3.voltage.ch2 }}</v-col>
+      <v-col>{{ sensor3.current.ch2 }}</v-col>
       <v-col></v-col>
     </v-row>
     <v-row>
       <v-col>Channel 12</v-col>
-      <v-col
-        ><p>{{ sensors[3].voltage[2] }}</p></v-col
-      >
-      <v-col>{{ sensors[3].current[2] }}</v-col>
+      <v-col>{{ sensor3.voltage.ch3 }}</v-col>
+      <v-col>{{ sensor3.current.ch3 }}</v-col>
       <v-col></v-col>
     </v-row>
   </v-container>
@@ -88,12 +86,54 @@ export default {
   name: "Info",
   data() {
     return {
-      sensors: [
-        { voltage: [0, 0, 0], current: [0, 0, 0] },
-        { voltage: [0, 0, 0], current: [0, 0, 0] },
-        { voltage: [0, 0, 0], current: [0, 0, 0] },
-        { voltage: [0, 0, 0], current: [0, 0, 0] }
-      ]
+      sensor0: {
+        voltage: {
+          ch1: 0,
+          ch2: 0,
+          ch3: 0
+        },
+        current: {
+          ch1: 0,
+          ch2: 0,
+          ch3: 0
+        }
+      },
+      sensor1: {
+        voltage: {
+          ch1: 0,
+          ch2: 0,
+          ch3: 0
+        },
+        current: {
+          ch1: 0,
+          ch2: 0,
+          ch3: 0
+        }
+      },
+      sensor2: {
+        voltage: {
+          ch1: 0,
+          ch2: 0,
+          ch3: 0
+        },
+        current: {
+          ch1: 0,
+          ch2: 0,
+          ch3: 0
+        }
+      },
+      sensor3: {
+        voltage: {
+          ch1: 0,
+          ch2: 0,
+          ch3: 0
+        },
+        current: {
+          ch1: 0,
+          ch2: 0,
+          ch3: 0
+        }
+      }
     };
   },
   mounted() {
@@ -102,9 +142,12 @@ export default {
       console.log(event.data);
       for (let i = 0; i < 4; i++) {
         let offset = i * 3;
-        this.sensors[i].voltage = event.data.voltage.slice(offset, offset + 3);
-        this.sensors[i].current = event.data.current.slice(offset, offset + 3);
-        this.$set(this.sensors, i, this.sensors[i]);
+        this["sensor" + i].voltage.ch1 = event.data.voltage[offset];
+        this["sensor" + i].voltage.ch2 = event.data.voltage[1 + offset];
+        this["sensor" + i].voltage.ch3 = event.data.voltage[2 + offset];
+        this["sensor" + i].current.ch1 = event.data.current[offset];
+        this["sensor" + i].current.ch2 = event.data.current[1 + offset];
+        this["sensor" + i].current.ch3 = event.data.current[2 + offset];
       }
     };
     conn.onclose = () => {
