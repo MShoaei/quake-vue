@@ -82,12 +82,15 @@
 </template>
 
 <script>
-// const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
+const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+import axios from "@/plugins/axios";
 
 export default {
   name: "Info",
   data() {
     return {
+      visible: true,
       sensor0: {
         voltage: {
           ch1: 0,
@@ -139,36 +142,25 @@ export default {
     };
   },
   async mounted() {
-    this.conn = new WebSocket("ws://" + window.location.host + "/api/info");
-    this.conn.onmessage = event => {
-      let data = JSON.parse(event.data);
-      console.log(data);
-      for (let i = 0; i < 4; i++) {
-        let offset = i * 3;
-        console.log(this["sensor" + i].voltage);
-        this["sensor" + i].voltage.ch1 = data.voltage[offset];
-        this["sensor" + i].voltage.ch2 = data.voltage[1 + offset];
-        this["sensor" + i].voltage.ch3 = data.voltage[2 + offset];
-        this["sensor" + i].current.ch1 = data.current[offset];
-        this["sensor" + i].current.ch2 = data.current[1 + offset];
-        this["sensor" + i].current.ch3 = data.current[2 + offset];
-        console.log(this["sensor" + i].voltage);
-      }
-    };
-    this.conn.onclose = () => {
-      console.log("websocket connection closed");
-    };
-    // let i = 0;
-    // for (let j = 0; j < 100; j++) {
-    //   this["sensor" + i].voltage.ch1 = this["sensor" + i].voltage.ch1 + 1;
-    //   await pause(500);
-    // }
+    while (this.visible) {
+      axios.get("/api/info").then(resp => {
+        let data = resp.data();
+        console.log(data);
+        for (let i = 0; i < 4; i++) {
+          let offset = i * 3;
+          this["sensor" + i].voltage.ch1 = data.voltage[offset];
+          this["sensor" + i].voltage.ch2 = data.voltage[1 + offset];
+          this["sensor" + i].voltage.ch3 = data.voltage[2 + offset];
+          this["sensor" + i].current.ch1 = data.current[offset];
+          this["sensor" + i].current.ch2 = data.current[1 + offset];
+          this["sensor" + i].current.ch3 = data.current[2 + offset];
+        }
+      });
+      await pause(5000);
+    }
   },
   beforeDestroy() {
-    console.log("before destroy");
-    if (this.conn.readyState === WebSocket.OPEN) {
-      this.conn.close();
-    }
+    this.visible = false;
   }
 };
 </script>
