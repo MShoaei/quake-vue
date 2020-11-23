@@ -165,7 +165,10 @@ export default {
     // }
   },
   beforeDestroy() {
-    this.conn.close();
+    console.log("before destroy");
+    if (this.conn.readyState === WebSocket.OPEN) {
+      this.conn.close();
+    }
   }
 };
 </script>
