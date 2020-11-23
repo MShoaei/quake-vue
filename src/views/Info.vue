@@ -104,6 +104,7 @@ export default {
         let offset = i * 3;
         this.sensors[i].voltage = event.data.voltage.slice(offset, offset + 3);
         this.sensors[i].current = event.data.current.slice(offset, offset + 3);
+        this.$set(this.sensors, i, this.sensors[i]);
       }
     };
     conn.onclose = () => {
