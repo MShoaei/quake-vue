@@ -144,7 +144,7 @@ export default {
   async mounted() {
     while (this.visible) {
       axios.get("/api/info").then(resp => {
-        let data = resp.data();
+        let data = resp.data;
         console.log(data);
         for (let i = 0; i < 4; i++) {
           let offset = i * 3;
