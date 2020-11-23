@@ -141,16 +141,17 @@ export default {
   async mounted() {
     this.conn = new WebSocket("ws://" + window.location.host + "/api/info");
     this.conn.onmessage = event => {
-      console.log(event.data);
+      let data = JSON.parse(event.data);
+      console.log(data);
       for (let i = 0; i < 4; i++) {
         let offset = i * 3;
         console.log(this["sensor" + i].voltage);
-        this["sensor" + i].voltage.ch1 = event.data.voltage[offset];
-        this["sensor" + i].voltage.ch2 = event.data.voltage[1 + offset];
-        this["sensor" + i].voltage.ch3 = event.data.voltage[2 + offset];
-        this["sensor" + i].current.ch1 = event.data.current[offset];
-        this["sensor" + i].current.ch2 = event.data.current[1 + offset];
-        this["sensor" + i].current.ch3 = event.data.current[2 + offset];
+        this["sensor" + i].voltage.ch1 = data.voltage[offset];
+        this["sensor" + i].voltage.ch2 = data.voltage[1 + offset];
+        this["sensor" + i].voltage.ch3 = data.voltage[2 + offset];
+        this["sensor" + i].current.ch1 = data.current[offset];
+        this["sensor" + i].current.ch2 = data.current[1 + offset];
+        this["sensor" + i].current.ch3 = data.current[2 + offset];
         console.log(this["sensor" + i].voltage);
       }
     };
