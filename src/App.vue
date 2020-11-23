@@ -29,11 +29,11 @@
           </v-list-item-icon>
           <v-list-item-content>plot</v-list-item-content>
         </v-list-item>
-        <v-list-item link to="/about">
+        <v-list-item link to="/info">
           <v-list-item-icon>
             <v-icon>mdi-information</v-icon>
           </v-list-item-icon>
-          <v-list-item-content>About</v-list-item-content>
+          <v-list-item-content>Board Info</v-list-item-content>
         </v-list-item>
         <v-list-group no-action>
           <template v-slot:activator>

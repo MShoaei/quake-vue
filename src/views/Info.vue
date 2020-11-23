@@ -100,6 +100,11 @@ export default {
     let conn = new WebSocket("ws://" + window.location.host + "/api/info");
     conn.onmessage = event => {
       console.log(event.data);
+      for (let i = 0; i < 4; i++) {
+        let offset = i * 3;
+        this.sensors[i].voltage = event.data.voltage.slice(offset, offset + 3);
+        this.sensors[i].current = event.data.current.slice(offset, offset + 3);
+      }
     };
     conn.onclose = () => {
       console.log("websocket connection closed");
