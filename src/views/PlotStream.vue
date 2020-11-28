@@ -214,6 +214,17 @@ export default {
         for (let i = 0; i < size; i++) {
           this.data.globalY[i] = i;
         }
+
+        let channels = resp.data.channels;
+        for (let i = 0; i < channels.length; i++) {
+          this.data.push({
+            y: this.globalY,
+            x: [],
+            type: "scatter",
+            name: "Channel " + channels[i],
+            marker: { color: "red" }
+          });
+        }
       })
       .then(() => {
         let conn = new WebSocket(
