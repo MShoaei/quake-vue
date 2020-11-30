@@ -1,6 +1,11 @@
 <template>
   <div>
-    <vue-plotly ref="plot" :data="data" :layout="layout" :options="options" />
+    <vue-plotly
+      ref="plot"
+      :data="plotData"
+      :layout="layout"
+      :options="options"
+    />
   </div>
 </template>
 
@@ -20,148 +25,7 @@ export default {
       delay: 1,
       globalY: [],
       form: router.currentRoute.query,
-      data: [
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC0.0",
-          marker: { color: "blue" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC0.1",
-          marker: { color: "blue" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC0.2",
-          marker: { color: "blue" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC0.3",
-          marker: { color: "blue" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC1.0",
-          marker: { color: "green" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC1.1",
-          marker: { color: "green" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC1.2",
-          marker: { color: "green" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC1.3",
-          marker: { color: "green" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC2.0",
-          marker: { color: "orange" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC2.1",
-          marker: { color: "orange" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC2.2",
-          marker: { color: "orange" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC2.3",
-          marker: { color: "orange" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC3.0",
-          marker: { color: "red" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC3.1",
-          marker: { color: "red" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC3.2",
-          marker: { color: "red" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC3.3",
-          marker: { color: "red" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC5.0",
-          marker: { color: "black" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC5.1",
-          marker: { color: "black" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC5.2",
-          marker: { color: "black" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC5.3",
-          marker: { color: "black" }
-        }
-      ],
+      plotData: [],
       layout: {
         // width: 320,
         height: 800,
@@ -197,33 +61,35 @@ export default {
       }
     };
   },
-  mounted: function() {
+  created: function() {
     axios
       .post("/api/plot", this.form)
       .then(resp => {
         let size = resp.data.size;
         this.i = 0;
-        for (let i = 0; i < this.data.length; i++) {
-          this.data[i].x = Array(size);
+        for (let i = 0; i < this.plotData.length; i++) {
+          this.plotData[i].x = Array(size);
           for (let j = 0; j < size; j++) {
-            this.data[i].x[j] = j * 200000;
+            this.plotData[i].x[j] = j * 200000;
           }
         }
 
-        this.data.globalY = Array(size);
+        this.globalY = Array(size);
         for (let i = 0; i < size; i++) {
-          this.data.globalY[i] = i;
+          this.globalY[i] = i;
         }
 
         let channels = resp.data.channels;
         for (let i = 0; i < channels.length; i++) {
-          this.data.push({
-            y: this.globalY,
-            x: [],
-            type: "scatter",
-            name: "Channel " + channels[i],
-            marker: { color: "red" }
-          });
+          if (channels[i]) {
+            this.plotData.push({
+              y: this.globalY,
+              x: [],
+              type: "scatter",
+              name: "Channel " + i,
+              marker: { color: "red" }
+            });
+          }
         }
       })
       .then(() => {
@@ -236,17 +102,17 @@ export default {
         conn.binaryType = "arraybuffer";
         conn.onmessage = event => {
           let view = new Int32Array(event.data);
-          for (let i = 0; i < this.data.length; i++) {
-            this.data[i].x[this.i] = view[i] + i * 50000;
+          for (let i = 0; i < this.plotData.length; i++) {
+            this.plotData[i].x[this.i] = view[i] + i * 50000;
           }
           this.i++;
         };
         conn.onclose = () => {
           this.$set(this.layout.yaxis.range, 0, this.globalY.length + 20);
           this.$set(
-            this.data[this.data.length - 1].x,
+            this.plotData[this.plotData.length - 1].x,
             this.i,
-            50000 * this.data.length
+            this.plotData[this.plotData.length - 1].x[this.i]
           );
         };
       });
