@@ -278,7 +278,7 @@ export default {
       32768,
       65536
     ],
-    samplingTimes: [16, 31.25, 62.5, 125, 250, 500, 1000, 2000],
+    samplingTimes: [31.25, 62.5, 125, 250, 500, 1000],
     channels: [
       false,
       false,
@@ -704,8 +704,8 @@ export default {
     ],
     formData: {
       startMode: "asap",
-      recordTime: 32,
-      samplingTime: 16,
+      recordTime: 1024,
+      samplingTime: 1000,
       fileName: "",
       projectName: ""
     }
