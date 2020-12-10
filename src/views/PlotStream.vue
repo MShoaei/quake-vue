@@ -37,11 +37,11 @@ export default {
         },
         title: "A Fancy Plot",
         yaxis: {
-          visible: true
+          visible: true,
         },
         xaxis: {
           visible: true,
-          range: [-10000000, 10000000]
+          // range: [-100000000,100000000]
         }
       },
       options: {
@@ -49,7 +49,7 @@ export default {
         displaylogo: false,
         responsive: true,
         autoScale: false,
-        doubleClickDelay: 1,
+        doubleClickDelay: 100,
         modeBarButtonsToRemove: [
           "toImage",
           "autoScale2d",
@@ -67,13 +67,6 @@ export default {
       .then(resp => {
         let size = resp.data.size;
         this.i = 0;
-        for (let i = 0; i < this.plotData.length; i++) {
-          this.plotData[i].x = Array(size);
-          for (let j = 0; j < size; j++) {
-            this.plotData[i].x[j] = j * 200000;
-          }
-        }
-
         this.globalY = Array(size);
         for (let i = 0; i < size; i++) {
           this.globalY[i] = i;
@@ -84,13 +77,18 @@ export default {
           if (channels[i]) {
             this.plotData.push({
               y: this.globalY,
-              x: [],
+              x: Array(size),
               type: "scatter",
               name: "Channel " + i,
               marker: { color: "red" }
             });
           }
         }
+        this.layout.xaxis.range = [
+          this.plotData.length * 5000000,
+          this.plotData.length * -5000000
+        ];
+        this.$set(this.layout.xaxis.range, 1, this.plotData.length * 5000000);
       })
       .then(() => {
         let conn = new WebSocket(
@@ -108,7 +106,10 @@ export default {
           this.i++;
         };
         conn.onclose = () => {
-          this.$set(this.layout.yaxis.range, 0, this.globalY.length + 20);
+          this.layout.yaxis.range = [0, this.globalY.length + 20];
+          this.$set(this.layout.yaxis.range, 1, this.globalY.length + 20);
+          this.layout.xaxis.range = [-100000000, 100000000];
+          this.$set(this.layout.yaxis.range, 1, 100000000);
           this.$set(
             this.plotData[this.plotData.length - 1].x,
             this.i,
