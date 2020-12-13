@@ -1,12 +1,17 @@
 <template>
-  <div>
-    <vue-plotly
-      ref="plot"
-      :data="plotData"
-      :layout="layout"
-      :options="options"
-    />
-  </div>
+  <v-col>
+    <v-btn icon outlined large color="primary" link to="/">
+      <v-icon dark>mdi-arrow-left</v-icon>
+    </v-btn>
+    <div>
+      <vue-plotly
+        ref="plot"
+        :data="plotData"
+        :layout="layout"
+        :options="options"
+      />
+    </div>
+  </v-col>
 </template>
 
 <script>
