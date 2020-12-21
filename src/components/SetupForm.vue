@@ -226,6 +226,18 @@
           </v-col>
         </v-row>
         <v-row>
+          <v-col cols="6" sm="4">
+            <v-subheader>Averaging window</v-subheader>
+          </v-col>
+          <v-col cols="6" sm="2">
+            <v-text-field
+              :rules="[rules.inRange]"
+              v-model.number="formData.window"
+            >
+            </v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
           <v-col>
             <v-text-field
               v-model.trim="formData.projectName"
@@ -264,6 +276,9 @@ export default {
     channelDialog: false,
     gainDialog: false,
     samplingCompleteDialog: false,
+    rules: {
+      inRange: value => value > 0 && value < 101
+    },
     recordTimes: [
       32,
       64,
@@ -706,6 +721,7 @@ export default {
       startMode: "asap",
       recordTime: 1024,
       samplingTime: 1000,
+      window: 1,
       fileName: "",
       projectName: ""
     }

@@ -2,7 +2,7 @@
   <v-container>
     <SetupForm />
     <v-row>
-      <v-col cols="12">
+      <v-col cols="8">
         <v-card class="mt-5">
           <v-card-title class="primary white--text headline">
             Data Directory
@@ -24,84 +24,148 @@
           <v-card-text v-else>No sample available</v-card-text>
         </v-card>
       </v-col>
-    </v-row>
-    <v-row v-if="selected.length > 0">
-      <v-col cols="2" v-if="selected[0].children === undefined">
-        <v-btn color="primary" dark link :to="plotPath"> Show Plot </v-btn>
-      </v-col>
-      <v-col cols="2">
-        <v-dialog v-model="dialogEdit" persistent max-width="600px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark v-bind="attrs" v-on="on"> Edit </v-btn>
-          </template>
-          <v-card>
-            <v-card-title>
-              <span class="headline">Edit Name</span>
-            </v-card-title>
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      label="Current Name"
-                      v-model="selected[0].name"
-                      disabled
-                      readonly
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      label="New Name*"
-                      v-model="newName"
-                      required
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
-              <small>*indicates required field</small>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="red darken-1" text @click="dialogEdit = false">
-                Cancel
-              </v-btn>
-              <v-btn color="green darken-1" text @click="editName">
-                Change
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-col>
-      <v-col cols="2">
-        <v-dialog v-model="dialogDelete" persistent max-width="600px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn color="red" dark v-bind="attrs" v-on="on"> Delete </v-btn>
-          </template>
-          <v-card>
-            <v-card-title class="headline"> Confirm Deletion </v-card-title>
-            <v-card-text
-              >You are deleting a project/file. Are you sure? This action is NOT
-              reversable.</v-card-text
+      <v-col>
+        <v-row v-if="selected.length > 0">
+          <v-col cols="4" v-if="selected[0].children === undefined">
+            <v-btn
+              color="primary"
+              dark
+              @click.prevent="
+                getDefaultWindow();
+                dialogAverageWindow = true;
+              "
+              >Show Plot</v-btn
             >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn text @click="dialogDelete = false"> Cancel </v-btn>
-              <v-btn color="red darken-1" text @click="deleteFileOrFolder">
-                Delete
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+            <v-dialog
+              v-model="dialogAverageWindow"
+              persistent
+              max-width="600px"
+            >
+              <v-card>
+                <v-card-title class="headline"
+                  >Select Averaging Window</v-card-title
+                >
+                <v-card-text>
+                  <v-row>
+                    <v-col cols="3">
+                      <v-subheader>Averaging window</v-subheader>
+                    </v-col>
+                    <v-col cols="2">
+                      <v-text-field
+                        :rules="[rules.inRange]"
+                        v-model.number="window"
+                      >
+                      </v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn text @click="dialogAverageWindow = false"
+                    >Cancel</v-btn
+                  >
+                  <v-btn color="success" text @click="showPlot">
+                    OK
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-col>
+          <v-col cols="4">
+            <v-dialog v-model="dialogEdit" persistent max-width="600px">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn color="primary" dark v-bind="attrs" v-on="on"
+                  >Edit</v-btn
+                >
+              </template>
+              <v-card>
+                <v-card-title>
+                  <span class="headline">Edit Name</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          label="Current Name"
+                          v-model="selected[0].name"
+                          disabled
+                          readonly
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          label="New Name*"
+                          v-model="newName"
+                          required
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                  <small>*indicates required field</small>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="red darken-1" text @click="dialogEdit = false">
+                    Cancel
+                  </v-btn>
+                  <v-btn color="green darken-1" text @click="editName">
+                    Change
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-col>
+          <v-col cols="4">
+            <v-dialog v-model="dialogDelete" persistent max-width="600px">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn color="red" dark v-bind="attrs" v-on="on">
+                  Delete
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title class="headline"> Confirm Deletion </v-card-title>
+                <v-card-text
+                  >You are deleting a project/file. Are you sure? This action is
+                  NOT reversable.</v-card-text
+                >
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn text @click="dialogDelete = false"> Cancel </v-btn>
+                  <v-btn color="red darken-1" text @click="deleteFileOrFolder">
+                    Delete
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-col>
+          <v-bottom-sheet v-model="sheet" hide-overlay inset>
+            <v-sheet
+              class="text-center d-flex justify-center align-center"
+              height="100px"
+            >
+              <v-icon color="green" large>mdi-check-circle</v-icon>Successfully
+              saved data to USB</v-sheet
+            >
+          </v-bottom-sheet>
+        </v-row>
+        <v-row v-if="selected.length > 0">
+          <v-col>
+            <v-btn color="primary" dark @click="exportToUSB">Export</v-btn>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import SetupForm from "@/components/SetupForm";
 import axios from "@/plugins/axios";
+import PlotStream from "@/views/PlotStream";
+import router from "@/router";
+import SetupForm from "@/components/SetupForm";
 
 function deleteTreeItem(root, path) {
   for (let i = 0; i < root.children.length; i++) {
@@ -121,12 +185,12 @@ function deleteTreeItem(root, path) {
 export default {
   name: "Setup",
   components: {
-    SetupForm
+    SetupForm,
   },
   mounted() {
     axios
       .get("/api/tree/")
-      .then(resp => {
+      .then((resp) => {
         for (const item of resp.data.items) {
           this.currentID++;
           if (item.dir) {
@@ -134,13 +198,13 @@ export default {
               id: this.currentID.toString(),
               path: resp.data.directory + item.name,
               name: item.name,
-              children: []
+              children: [],
             });
           } else {
             this.items[0].children.push({
               id: this.currentID.toString(),
               path: resp.data.directory + item.name,
-              name: item.name
+              name: item.name,
             });
           }
         }
@@ -153,28 +217,34 @@ export default {
         {
           id: "0",
           name: "/",
-          children: this.treeData
-        }
+          children: this.treeData,
+        },
       ];
     },
     plotPath() {
       return "/plot?file=" + this.selected[0].path;
-    }
+    },
   },
   data: () => ({
+    window: 1,
+    dialogAverageWindow: false,
     dialogEdit: false,
     dialogDelete: false,
+    sheet: false,
     newName: "",
     currentID: 0,
     open: [],
     treeData: [],
-    selected: []
+    selected: [],
+    rules: {
+      inRange: (value) => value > 0 && value < 101,
+    },
   }),
   methods: {
     async fetchDir(item) {
       return axios
         .get("/api/tree" + item.path)
-        .then(resp => {
+        .then((resp) => {
           for (const respItem of resp.data.items) {
             this.currentID++;
             if (respItem.dir) {
@@ -182,13 +252,13 @@ export default {
                 id: this.currentID.toString(),
                 path: resp.data.directory + "/" + respItem.name,
                 name: respItem.name,
-                children: []
+                children: [],
               });
             } else {
               item.children.push({
                 id: this.currentID.toString(),
                 path: resp.data.directory + "/" + respItem.name,
-                name: respItem.name
+                name: respItem.name,
               });
             }
           }
@@ -198,12 +268,41 @@ export default {
     selectedItemChanged(item) {
       console.log(JSON.stringify(item));
     },
+    getDefaultWindow() {
+      axios.post("/api/plot", { file: this.selected[0].path }).then((resp) => {
+        this.window = resp.data.window;
+        this.sheet = true;
+      });
+    },
+    exportToUSB() {
+      let apiPath = "";
+      let form = {};
+      if (this.selected[0].children === undefined) {
+        apiPath = "/api/save/sample";
+        form["file"] = this.selected[0].path;
+      } else {
+        apiPath = "/api/save/project";
+        form["project"] = this.selected[0].path;
+      }
+      axios.post(apiPath, form).then((resp) => {
+        console.log(resp.data);
+      });
+    },
+    showPlot() {
+      router.push({
+        path: "/plot",
+        component: PlotStream,
+        query: {
+          file: this.selected[0].path,
+        },
+      });
+    },
     editName() {
       axios
         .patch("/api/tree" + this.selected[0].path, {
-          newName: this.newName
+          newName: this.newName,
         })
-        .then(resp => {
+        .then((resp) => {
           console.log(resp);
           this.selected[0].name = this.newName;
           let parts = this.selected[0].path.split("/");
@@ -216,14 +315,14 @@ export default {
     deleteFileOrFolder() {
       axios
         .delete("/api/tree" + this.selected[0].path)
-        .then(resp => {
+        .then((resp) => {
           console.log(resp);
           deleteTreeItem(this.items[0], this.selected[0].path);
         })
         .catch();
       this.dialogDelete = false;
-    }
-  }
+    },
+  },
 };
 </script>
 
