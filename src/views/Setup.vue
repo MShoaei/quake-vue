@@ -19,7 +19,6 @@
             open-all
             :open.sync="open"
             :active.sync="selected"
-            @update:active="selectedItemChanged"
           ></v-treeview>
           <v-card-text v-else>No sample available</v-card-text>
         </v-card>
@@ -146,14 +145,23 @@
               class="text-center d-flex justify-center align-center"
               height="100px"
             >
-              <v-icon color="green" large>mdi-check-circle</v-icon>Successfully
-              saved data to USB</v-sheet
+              <v-icon v-if="exportResponse.success" color="green" large
+                >mdi-check-circle</v-icon
+              >
+              <v-icon v-else color="red" large>mdi-information</v-icon
+              >{{ exportResponse.message }}</v-sheet
             >
           </v-bottom-sheet>
         </v-row>
         <v-row v-if="selected.length > 0">
-          <v-col>
+          <v-col cols="4">
             <v-btn color="primary" dark @click="exportToUSB">Export</v-btn>
+          </v-col>
+          <v-col>
+            <v-checkbox
+              v-model="force"
+              label="force overwrite files"
+            ></v-checkbox>
           </v-col>
         </v-row>
       </v-col>
@@ -171,7 +179,6 @@ function deleteTreeItem(root, path) {
   for (let i = 0; i < root.children.length; i++) {
     if (root.children[i].path === path) {
       root.children.splice(i, 1);
-      // console.log(root.children[i])
       return true;
     }
   }
@@ -230,6 +237,11 @@ export default {
     dialogAverageWindow: false,
     dialogEdit: false,
     dialogDelete: false,
+    exportResponse: {
+      success: false,
+      message: "",
+    },
+    force: false,
     sheet: false,
     newName: "",
     currentID: 0,
@@ -265,13 +277,9 @@ export default {
         })
         .catch();
     },
-    selectedItemChanged(item) {
-      console.log(JSON.stringify(item));
-    },
     getDefaultWindow() {
       axios.post("/api/plot", { file: this.selected[0].path }).then((resp) => {
         this.window = resp.data.window;
-        this.sheet = true;
       });
     },
     exportToUSB() {
@@ -284,9 +292,23 @@ export default {
         apiPath = "/api/save/project";
         form["project"] = this.selected[0].path;
       }
-      axios.post(apiPath, form).then((resp) => {
-        console.log(resp.data);
-      });
+
+      if (this.force) {
+        apiPath = apiPath + "?force=true";
+      }
+      axios
+        .post(apiPath, form)
+        .then(() => {
+          this.exportResponse.success = true;
+          this.exportResponse.message = "Successfully saved data to USB";
+        })
+        .catch((error) => {
+          this.exportResponse.success = false;
+          this.exportResponse.message = error.response.data.err;
+        })
+        .then(() => {
+          this.sheet = true;
+        });
     },
     showPlot() {
       router.push({
@@ -302,8 +324,7 @@ export default {
         .patch("/api/tree" + this.selected[0].path, {
           newName: this.newName,
         })
-        .then((resp) => {
-          console.log(resp);
+        .then(() => {
           this.selected[0].name = this.newName;
           let parts = this.selected[0].path.split("/");
           parts[parts.length - 1] = this.newName;
@@ -315,8 +336,7 @@ export default {
     deleteFileOrFolder() {
       axios
         .delete("/api/tree" + this.selected[0].path)
-        .then((resp) => {
-          console.log(resp);
+        .then(() => {
           deleteTreeItem(this.items[0], this.selected[0].path);
         })
         .catch();
