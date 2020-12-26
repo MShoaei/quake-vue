@@ -154,15 +154,41 @@
           </v-bottom-sheet>
         </v-row>
         <v-row v-if="selected.length > 0">
-          <v-col cols="4">
-            <v-btn color="primary" dark @click="exportToUSB">Export</v-btn>
-          </v-col>
           <v-col>
-            <v-checkbox
-              v-model="force"
-              label="force overwrite files"
-            ></v-checkbox>
+            <v-btn color="primary" dark @click="exportToUSB(false)"
+              >Export</v-btn
+            >
           </v-col>
+          <v-dialog v-model="overwriteDialog" max-width="290" persistent>
+            <v-card>
+              <v-card-title class="headline justify-center">
+                <v-icon color="orange" size="75">mdi-information</v-icon>
+              </v-card-title>
+              <v-card-text
+                >File/Folder already exists. Do you want to overwrite it?
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="green darken-1"
+                  text
+                  @click="
+                    overwriteDialog = false;
+                    sheet = true;
+                  "
+                >
+                  No
+                </v-btn>
+                <v-btn
+                  color="green darken-1"
+                  text
+                  @click.prevent="exportToUSB(true)"
+                >
+                  Yes
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-row>
       </v-col>
     </v-row>
@@ -241,7 +267,7 @@ export default {
       success: false,
       message: "",
     },
-    force: false,
+    overwriteDialog: false,
     sheet: false,
     newName: "",
     currentID: 0,
@@ -282,7 +308,7 @@ export default {
         this.window = resp.data.window;
       });
     },
-    exportToUSB() {
+    exportToUSB(force) {
       let apiPath = "";
       let form = {};
       if (this.selected[0].children === undefined) {
@@ -293,22 +319,39 @@ export default {
         form["project"] = this.selected[0].path;
       }
 
-      if (this.force) {
+      if (force) {
         apiPath = apiPath + "?force=true";
+        axios
+          .post(apiPath, form)
+          .then(() => {
+            this.exportResponse.success = true;
+            this.exportResponse.message = "Successfully saved data to USB";
+          })
+          .catch((error) => {
+            this.exportResponse.success = false;
+            this.exportResponse.message = error.response.data.error;
+          })
+          .then(() => {
+            this.sheet = true;
+          });
+      } else {
+        axios
+          .post(apiPath, form)
+          .then(() => {
+            this.exportResponse.success = true;
+            this.exportResponse.message = "Successfully saved data to USB";
+            this.sheet = true;
+          })
+          .catch((error) => {
+            this.exportResponse.success = false;
+            this.exportResponse.message = error.response.data.error;
+            if (error.response.data.error.includes("exists")) {
+              this.overwriteDialog = true;
+            } else {
+              this.sheet = true;
+            }
+          });
       }
-      axios
-        .post(apiPath, form)
-        .then(() => {
-          this.exportResponse.success = true;
-          this.exportResponse.message = "Successfully saved data to USB";
-        })
-        .catch((error) => {
-          this.exportResponse.success = false;
-          this.exportResponse.message = error.response.data.err;
-        })
-        .then(() => {
-          this.sheet = true;
-        });
     },
     showPlot() {
       router.push({
@@ -316,6 +359,7 @@ export default {
         component: PlotStream,
         query: {
           file: this.selected[0].path,
+          window: this.window,
         },
       });
     },
