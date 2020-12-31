@@ -236,6 +236,15 @@
             >
             </v-text-field>
           </v-col>
+          <v-col v-if="formData.startMode === 'hammer'" cols="6" sm="4">
+            <v-subheader>Threshold</v-subheader>
+          </v-col>
+          <v-col v-if="formData.startMode === 'hammer'" cols="6" sm="2">
+            <v-text-field
+              v-model.number="formData.threshold"
+              suffix="µV"
+            ></v-text-field>
+          </v-col>
         </v-row>
         <v-row>
           <v-col>
@@ -277,7 +286,7 @@ export default {
     gainDialog: false,
     samplingCompleteDialog: false,
     rules: {
-      inRange: value => value > 0 && value < 101
+      inRange: (value) => value > 0 && value < 101,
     },
     recordTimes: [
       32,
@@ -291,7 +300,7 @@ export default {
       8192,
       16384,
       32768,
-      65536
+      65536,
     ],
     samplingTimes: [31.25, 62.5, 125, 250, 500, 1000],
     channels: [
@@ -318,14 +327,14 @@ export default {
       false,
       false,
       false,
-      false
+      false,
     ],
     headers: [
       {
         text: "Channel",
         align: "start",
         sortable: false,
-        value: "channel"
+        value: "channel",
       },
       { text: "0", sortable: false, value: "g0" },
       { text: "2", sortable: false, value: "g2" },
@@ -338,7 +347,7 @@ export default {
       { text: "1000", sortable: false, value: "g1000" },
       { text: "5000", sortable: false, value: "g5000" },
       { text: "10000", sortable: false, value: "g10000" },
-      { text: "15000", sortable: false, value: "g15000" }
+      { text: "15000", sortable: false, value: "g15000" },
     ],
     gains: [
       {
@@ -354,7 +363,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 1,
@@ -369,7 +378,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 2,
@@ -384,7 +393,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 3,
@@ -399,7 +408,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 4,
@@ -414,7 +423,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 5,
@@ -429,7 +438,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 6,
@@ -444,7 +453,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 7,
@@ -459,7 +468,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 8,
@@ -474,7 +483,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 9,
@@ -489,7 +498,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 10,
@@ -504,7 +513,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 11,
@@ -519,7 +528,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 12,
@@ -534,7 +543,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 13,
@@ -549,7 +558,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 14,
@@ -564,7 +573,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 15,
@@ -579,7 +588,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 16,
@@ -594,7 +603,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 17,
@@ -609,7 +618,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 18,
@@ -624,7 +633,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 19,
@@ -639,7 +648,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 20,
@@ -654,7 +663,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 21,
@@ -669,7 +678,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 22,
@@ -684,7 +693,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 23,
@@ -699,7 +708,7 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
+        g15000: false,
       },
       {
         channel: 24,
@@ -714,17 +723,18 @@ export default {
         g1000: false,
         g5000: false,
         g10000: false,
-        g15000: false
-      }
+        g15000: false,
+      },
     ],
     formData: {
       startMode: "asap",
+      threshold: 0,
       recordTime: 1024,
       samplingTime: 1000,
       window: 1,
       fileName: "",
-      projectName: ""
-    }
+      projectName: "",
+    },
   }),
   methods: {
     setupDevice: function() {
@@ -761,7 +771,7 @@ export default {
     selectChannelGain: function(channel, key) {
       let newValue = this.gains[channel === "All" ? 0 : channel][key];
       if (channel === "All") {
-        Object.keys(this.gains[0]).forEach(key => {
+        Object.keys(this.gains[0]).forEach((key) => {
           if (this.gains[0][key] === true || this.gains[0][key] === false) {
             for (let i = 0; i < this.gains.length; i++) {
               this.$set(this.gains[i], key, false);
@@ -775,7 +785,7 @@ export default {
         }
         this.$set(this.gains[0], key, newValue);
       } else {
-        Object.keys(this.gains[channel]).forEach(key => {
+        Object.keys(this.gains[channel]).forEach((key) => {
           if (this.gains[channel][key] === true) {
             this.gains[channel][key] = false;
           }
@@ -793,13 +803,13 @@ export default {
               ? ""
               : this.formData.projectName) +
             "/" +
-            this.formData.fileName
-        }
+            this.formData.fileName,
+        },
       });
     },
     setChannels: function() {
       this.channelDialog = false;
-      axios.post("/api/channels", this.channels).then(resp => {
+      axios.post("/api/channels", this.channels).then((resp) => {
         console.log(resp.data);
       });
     },
@@ -809,7 +819,7 @@ export default {
         gains[i] = 0;
       }
       for (let i = 0; i < 24; i++) {
-        Object.keys(this.gains[i + 1]).forEach(value => {
+        Object.keys(this.gains[i + 1]).forEach((value) => {
           if (
             typeof this.gains[i + 1][value] === "boolean" &&
             this.gains[i + 1][value] === true
@@ -818,18 +828,18 @@ export default {
           }
         });
       }
-      axios.post("/api/gains", gains).then(resp => {
+      axios.post("/api/gains", gains).then((resp) => {
         console.log(resp.data);
         this.gainDialog = false;
       });
-    }
+    },
   },
   mounted: function() {
-    axios.get("/api/channels").then(resp => {
+    axios.get("/api/channels").then((resp) => {
       console.log(resp.data);
       // this.channels = resp.data.rx;
     });
-  }
+  },
 };
 </script>
 
