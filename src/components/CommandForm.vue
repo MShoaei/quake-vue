@@ -31,7 +31,7 @@
                 :key="f.value"
                 :label="f.text"
                 :items="f.options"
-                @change="val => (Commands[index].postData[f.value] = val)"
+                @change="(val) => (Commands[index].postData[f.value] = val)"
               ></v-select>
             </v-col>
           </template>
@@ -48,7 +48,7 @@
         <p
           :class="{
             'red--text': errorResponse,
-            'green--text': !errorResponse
+            'green--text': !errorResponse,
           }"
         >
           {{ commandResponse }}
@@ -59,17 +59,16 @@
 </template>
 
 <script>
-import Vue from "vue";
 import axios from "@/plugins/axios";
 
-export default Vue.extend({
+export default {
   name: "CommandForm",
   methods: {
     submitForm: function(command, adc, data) {
       this.loading = true;
       axios
         .post("/api/command/" + command + "/" + adc, data)
-        .then(response => {
+        .then((response) => {
           this.commandResponse =
             response.data.message +
             " " +
@@ -79,7 +78,7 @@ export default Vue.extend({
             response.data.rx;
           this.errorResponse = false;
         })
-        .catch(error => {
+        .catch((error) => {
           this.commandResponse = error.message;
           this.errorResponse = true;
         });
@@ -92,9 +91,9 @@ export default Vue.extend({
       }
       this.submitForm(command, adc, {
         write: data.write,
-        channels: channels
+        channels: channels,
       });
-    }
+    },
   },
   data: () => ({
     adcSelectValues: ["all", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
@@ -121,7 +120,7 @@ export default Vue.extend({
       "all",
       "all",
       "all",
-      "all"
+      "all",
     ],
     loading: false,
     commandResponse: "",
@@ -138,75 +137,75 @@ export default Vue.extend({
             text: "read or write",
             options: [
               { value: true, text: "write" },
-              { value: false, text: "read" }
-            ]
+              { value: false, text: "read" },
+            ],
           },
           {
             value: "ch7",
             text: "ch7",
             options: [
               { value: true, text: "standby" },
-              { value: false, text: "enabled" }
-            ]
+              { value: false, text: "enabled" },
+            ],
           },
           {
             value: "ch6",
             text: "ch6",
             options: [
               { value: true, text: "standby" },
-              { value: false, text: "enabled" }
-            ]
+              { value: false, text: "enabled" },
+            ],
           },
           {
             value: "ch5",
             text: "ch5",
             options: [
               { value: true, text: "standby" },
-              { value: false, text: "enabled" }
-            ]
+              { value: false, text: "enabled" },
+            ],
           },
           {
             value: "ch4",
             text: "ch4",
             options: [
               { value: true, text: "standby" },
-              { value: false, text: "enabled" }
-            ]
+              { value: false, text: "enabled" },
+            ],
           },
           {
             value: "ch3",
             text: "ch3",
             options: [
               { value: true, text: "standby" },
-              { value: false, text: "enabled" }
-            ]
+              { value: false, text: "enabled" },
+            ],
           },
           {
             value: "ch2",
             text: "ch2",
             options: [
               { value: true, text: "standby" },
-              { value: false, text: "enabled" }
-            ]
+              { value: false, text: "enabled" },
+            ],
           },
           {
             value: "ch1",
             text: "ch1",
             options: [
               { value: true, text: "standby" },
-              { value: false, text: "enabled" }
-            ]
+              { value: false, text: "enabled" },
+            ],
           },
           {
             value: "ch0",
             text: "ch0",
             options: [
               { value: true, text: "standby" },
-              { value: false, text: "enabled" }
-            ]
-          }
+              { value: false, text: "enabled" },
+            ],
+          },
         ],
-        postData: {}
+        postData: {},
       },
       {
         value: "ChModeA",
@@ -217,16 +216,16 @@ export default Vue.extend({
             text: "read or write",
             options: [
               { value: true, text: "write" },
-              { value: false, text: "read" }
-            ]
+              { value: false, text: "read" },
+            ],
           },
           {
             value: "f-type",
             text: "filter type",
             options: [
               { value: 0, text: "wideband" },
-              { value: 1, text: "sinc5" }
-            ]
+              { value: 1, text: "sinc5" },
+            ],
           },
           {
             value: "dec-rate",
@@ -237,11 +236,11 @@ export default Vue.extend({
               { value: 128, text: "x128" },
               { value: 256, text: "x256" },
               { value: 512, text: "x512" },
-              { value: 1024, text: "x1024" }
-            ]
-          }
+              { value: 1024, text: "x1024" },
+            ],
+          },
         ],
-        postData: {}
+        postData: {},
       },
       {
         value: "ChModeB",
@@ -252,16 +251,16 @@ export default Vue.extend({
             text: "read or write",
             options: [
               { value: true, text: "write" },
-              { value: false, text: "read" }
-            ]
+              { value: false, text: "read" },
+            ],
           },
           {
             value: "f-type",
             text: "filter type",
             options: [
               { value: 0, text: "wideband" },
-              { value: 1, text: "sinc5" }
-            ]
+              { value: 1, text: "sinc5" },
+            ],
           },
           {
             value: "dec-rate",
@@ -272,11 +271,11 @@ export default Vue.extend({
               { value: 128, text: "x128" },
               { value: 256, text: "x256" },
               { value: 512, text: "x512" },
-              { value: 1024, text: "x1024" }
-            ]
-          }
+              { value: 1024, text: "x1024" },
+            ],
+          },
         ],
-        postData: {}
+        postData: {},
       },
       {
         value: "ChModeSel",
@@ -287,75 +286,75 @@ export default Vue.extend({
             text: "read or write",
             options: [
               { value: true, text: "write" },
-              { value: false, text: "read" }
-            ]
+              { value: false, text: "read" },
+            ],
           },
           {
             value: "ch7",
             text: "ch7 Mode",
             options: [
               { value: 0, text: "Mode A" },
-              { value: 1, text: "Mode B" }
-            ]
+              { value: 1, text: "Mode B" },
+            ],
           },
           {
             value: "ch6",
             text: "ch6 Mode",
             options: [
               { value: 0, text: "Mode A" },
-              { value: 1, text: "Mode B" }
-            ]
+              { value: 1, text: "Mode B" },
+            ],
           },
           {
             value: "ch5",
             text: "ch5 Mode",
             options: [
               { value: 0, text: "Mode A" },
-              { value: 1, text: "Mode B" }
-            ]
+              { value: 1, text: "Mode B" },
+            ],
           },
           {
             value: "ch4",
             text: "ch4 Mode",
             options: [
               { value: 0, text: "Mode A" },
-              { value: 1, text: "Mode B" }
-            ]
+              { value: 1, text: "Mode B" },
+            ],
           },
           {
             value: "ch3",
             text: "ch3 Mode",
             options: [
               { value: 0, text: "Mode A" },
-              { value: 1, text: "Mode B" }
-            ]
+              { value: 1, text: "Mode B" },
+            ],
           },
           {
             value: "ch2",
             text: "ch2 Mode",
             options: [
               { value: 0, text: "Mode A" },
-              { value: 1, text: "Mode B" }
-            ]
+              { value: 1, text: "Mode B" },
+            ],
           },
           {
             value: "ch1",
             text: "ch1 Mode",
             options: [
               { value: 0, text: "Mode A" },
-              { value: 1, text: "Mode B" }
-            ]
+              { value: 1, text: "Mode B" },
+            ],
           },
           {
             value: "ch0",
             text: "ch0 Mode",
             options: [
               { value: 0, text: "Mode A" },
-              { value: 1, text: "Mode B" }
-            ]
-          }
+              { value: 1, text: "Mode B" },
+            ],
+          },
         ],
-        postData: {}
+        postData: {},
       },
       {
         value: "PowerMode",
@@ -366,16 +365,16 @@ export default Vue.extend({
             text: "read or write",
             options: [
               { value: true, text: "write" },
-              { value: false, text: "read" }
-            ]
+              { value: false, text: "read" },
+            ],
           },
           {
             value: "sleep",
             text: "Sleep mode",
             options: [
               { value: 0, text: "Normal Operation" },
-              { value: 1, text: "Sleep Mode" }
-            ]
+              { value: 1, text: "Sleep Mode" },
+            ],
           },
           {
             value: "power",
@@ -383,16 +382,16 @@ export default Vue.extend({
             options: [
               { value: 0, text: "Low Power" },
               { value: 2, text: "Median" },
-              { value: 3, text: "Fast" }
-            ]
+              { value: 3, text: "Fast" },
+            ],
           },
           {
             value: "lvds-clk",
             text: "LVDS Enable",
             options: [
               { value: 0, text: "disable" },
-              { value: 1, text: "enable" }
-            ]
+              { value: 1, text: "enable" },
+            ],
           },
           {
             value: "mclk-div",
@@ -400,11 +399,11 @@ export default Vue.extend({
             options: [
               { value: 0, text: "MCLK/32" },
               { value: 2, text: "MCLK/8" },
-              { value: 3, text: "MCLK/4" }
-            ]
-          }
+              { value: 3, text: "MCLK/4" },
+            ],
+          },
         ],
-        postData: {}
+        postData: {},
       },
       {
         value: "GeneralConf",
@@ -415,24 +414,24 @@ export default Vue.extend({
             text: "read or write",
             options: [
               { value: true, text: "write" },
-              { value: false, text: "read" }
-            ]
+              { value: false, text: "read" },
+            ],
           },
           {
             value: "retime-en",
             text: "retime enable bit",
             options: [
               { value: 0, text: "enable" },
-              { value: 1, text: "disable" }
-            ]
+              { value: 1, text: "disable" },
+            ],
           },
           {
             value: "vcm-pd",
             text: "VCM buffer power-down",
             options: [
               { value: 0, text: "enabled" },
-              { value: 1, text: "powered down" }
-            ]
+              { value: 1, text: "powered down" },
+            ],
           },
           {
             value: "vcm-vsel",
@@ -441,11 +440,11 @@ export default Vue.extend({
               { value: 0, text: "(AVDD1 − AVSS)/2 V" },
               { value: 1, text: "1.65 V" },
               { value: 2, text: "2.5 V" },
-              { value: 3, text: "2.14 V" }
-            ]
-          }
+              { value: 3, text: "2.14 V" },
+            ],
+          },
         ],
-        postData: {}
+        postData: {},
       },
       {
         value: "DataControl",
@@ -456,27 +455,27 @@ export default Vue.extend({
             text: "read or write",
             options: [
               { value: true, text: "write" },
-              { value: false, text: "read" }
-            ]
+              { value: false, text: "read" },
+            ],
           },
           {
             value: "spi-sync",
             text: "SPI sync",
             options: [
               { value: 0, text: "SPI_SYNC low" },
-              { value: 1, text: "SPI_SYNC high" }
-            ]
+              { value: 1, text: "SPI_SYNC high" },
+            ],
           },
           {
             value: "single-shot",
             text: "One-shot mode",
             options: [
               { value: 0, text: "disabled" },
-              { value: 1, text: "enabled" }
-            ]
-          }
+              { value: 1, text: "enabled" },
+            ],
+          },
         ],
-        postData: {}
+        postData: {},
       },
       {
         value: "InterfaceConf",
@@ -487,8 +486,8 @@ export default Vue.extend({
             text: "read or write",
             options: [
               { value: true, text: "write" },
-              { value: false, text: "read" }
-            ]
+              { value: false, text: "read" },
+            ],
           },
           {
             value: "crc-sel",
@@ -496,8 +495,8 @@ export default Vue.extend({
             options: [
               { value: 0, text: "No CRC" },
               { value: 1, text: "every 4 samples" },
-              { value: 2, text: "every 16 samples" }
-            ]
+              { value: 2, text: "every 16 samples" },
+            ],
           },
           {
             value: "dclk-div",
@@ -506,11 +505,11 @@ export default Vue.extend({
               { value: 0, text: "Divide by 8" },
               { value: 1, text: "Divide by 4" },
               { value: 2, text: "Divide by 2" },
-              { value: 3, text: "No division" }
-            ]
-          }
+              { value: 3, text: "No division" },
+            ],
+          },
         ],
-        postData: {}
+        postData: {},
       },
       {
         value: "BISTControl",
@@ -521,19 +520,19 @@ export default Vue.extend({
             text: "read or write",
             options: [
               { value: true, text: "write" },
-              { value: false, text: "read" }
-            ]
+              { value: false, text: "read" },
+            ],
           },
           {
             value: "ram-bist-start",
             text: "RAM BIST",
             options: [
               { value: 0, text: "Off" },
-              { value: 1, text: "Begin" }
-            ]
-          }
+              { value: 1, text: "Begin" },
+            ],
+          },
         ],
-        postData: {}
+        postData: {},
       },
       {
         value: "DeviceStatus",
@@ -544,16 +543,16 @@ export default Vue.extend({
             text: "read or write",
             options: [
               // { value: true, text: "write" },
-              { value: false, text: "read" }
-            ]
-          }
+              { value: false, text: "read" },
+            ],
+          },
         ],
-        postData: {}
+        postData: {},
       },
       {
         value: "RevisionID",
         text: "Read Revision ID",
-        flags: []
+        flags: [],
       },
       {
         value: "ChOffset",
@@ -564,8 +563,8 @@ export default Vue.extend({
             text: "read or write",
             options: [
               { value: true, text: "write" },
-              { value: false, text: "read" }
-            ]
+              { value: false, text: "read" },
+            ],
           },
           {
             value: "Channel",
@@ -578,26 +577,26 @@ export default Vue.extend({
               { value: 0, text: "Channel 4" },
               { value: 0, text: "Channel 5" },
               { value: 0, text: "Channel 6" },
-              { value: 0, text: "Channel 7" }
-            ]
+              { value: 0, text: "Channel 7" },
+            ],
           },
           {
             value: "MSB",
             text: "MSB register",
-            options: [{ value: 0, text: "MSB value" }]
+            options: [{ value: 0, text: "MSB value" }],
           },
           {
             value: "Mid",
             text: "Mid register",
-            options: [{ value: 0, text: "Mid value" }]
+            options: [{ value: 0, text: "Mid value" }],
           },
           {
             value: "LSB",
             text: "LSB register",
-            options: [{ value: 0, text: "LSB value" }]
-          }
+            options: [{ value: 0, text: "LSB value" }],
+          },
         ],
-        postData: {}
+        postData: {},
       },
       {
         value: "ChGain",
@@ -608,31 +607,31 @@ export default Vue.extend({
             text: "read or write",
             options: [
               { value: true, text: "write" },
-              { value: false, text: "read" }
-            ]
+              { value: false, text: "read" },
+            ],
           },
           {
             value: "Channel",
             text: "Channel",
-            options: [{ value: 0, text: "Channel" }]
+            options: [{ value: 0, text: "Channel" }],
           },
           {
             value: "MSB",
             text: "MSB register",
-            options: [{ value: 0, text: "MSB value" }]
+            options: [{ value: 0, text: "MSB value" }],
           },
           {
             value: "Mid",
             text: "Mid register",
-            options: [{ value: 0, text: "Mid value" }]
+            options: [{ value: 0, text: "Mid value" }],
           },
           {
             value: "LSB",
             text: "LSB register",
-            options: [{ value: 0, text: "LSB value" }]
-          }
+            options: [{ value: 0, text: "LSB value" }],
+          },
         ],
-        postData: {}
+        postData: {},
       },
       {
         value: "ChSyncOffset",
@@ -643,28 +642,28 @@ export default Vue.extend({
             text: "read or write",
             options: [
               { value: true, text: "write" },
-              { value: false, text: "read" }
-            ]
+              { value: false, text: "read" },
+            ],
           },
           {
             value: "Channel",
             text: "Channel",
-            options: [{ value: "0", text: "Channel" }]
+            options: [{ value: "0", text: "Channel" }],
           },
           {
             value: "offset",
             text: "offset register",
-            options: [{ value: "1", text: "offset value" }]
-          }
+            options: [{ value: "1", text: "offset value" }],
+          },
         ],
-        postData: {}
+        postData: {},
       },
       {
         value: "HardReset",
         text: "Reset ADC",
-        flags: []
-      }
-    ]
-  })
-});
+        flags: [],
+      },
+    ],
+  }),
+};
 </script>

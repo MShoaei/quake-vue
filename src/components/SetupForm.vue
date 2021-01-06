@@ -275,7 +275,7 @@
 <script>
 import axios from "axios";
 import router from "@/router";
-import PlotStream from "@/views/PlotStream";
+// import PlotStream from "@/views/PlotStream";
 
 export default {
   name: "SetupForm",
@@ -796,7 +796,7 @@ export default {
     showPlot: function() {
       router.push({
         path: "/plot",
-        component: PlotStream,
+        // component: PlotStream,
         query: {
           file:
             (this.formData.projectName === "/"
