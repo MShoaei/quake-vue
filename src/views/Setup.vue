@@ -2,7 +2,7 @@
   <v-container>
     <SetupForm />
     <v-row>
-      <v-col cols="8">
+      <v-col cols="12" md="8">
         <v-card class="mt-5">
           <v-card-title class="primary white--text headline">
             Data Directory
@@ -23,23 +23,28 @@
           <v-card-text v-else>No sample available</v-card-text>
         </v-card>
       </v-col>
-      <v-col>
+      <v-col cols="12" md="4">
         <v-row v-if="selected.length > 0">
-          <v-col cols="4" v-if="selected[0].children === undefined">
-            <v-btn
-              color="primary"
-              dark
-              @click.prevent="
-                getDefaultWindow();
-                dialogAverageWindow = true;
-              "
-              >Show Plot</v-btn
-            >
+          <v-col cols="6" md="4">
             <v-dialog
               v-model="dialogAverageWindow"
               persistent
               max-width="600px"
             >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  block
+                  :disabled="selected[0].children !== undefined"
+                  color="primary"
+                  v-bind="attrs"
+                  v-on="on"
+                  @click.prevent="
+                    getDefaultWindow();
+                    dialogAverageWindow = true;
+                  "
+                  >Plot</v-btn
+                >
+              </template>
               <v-card>
                 <v-card-title class="headline"
                   >Select Averaging Window</v-card-title
@@ -70,10 +75,10 @@
               </v-card>
             </v-dialog>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="6" md="4">
             <v-dialog v-model="dialogEdit" persistent max-width="600px">
               <template v-slot:activator="{ on, attrs }">
-                <v-btn color="primary" dark v-bind="attrs" v-on="on"
+                <v-btn block color="primary" v-bind="attrs" v-on="on"
                   >Edit</v-btn
                 >
               </template>
@@ -117,10 +122,16 @@
               </v-card>
             </v-dialog>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="6" md="4">
             <v-dialog v-model="dialogDelete" persistent max-width="600px">
               <template v-slot:activator="{ on, attrs }">
-                <v-btn color="red" dark v-bind="attrs" v-on="on">
+                <v-btn
+                  block
+                  class="white-text"
+                  color="red"
+                  v-bind="attrs"
+                  v-on="on"
+                >
                   Delete
                 </v-btn>
               </template>
@@ -140,6 +151,11 @@
               </v-card>
             </v-dialog>
           </v-col>
+          <v-col cols="6" md="4">
+            <v-btn block color="primary" @click="exportToUSB(false)"
+              >Export</v-btn
+            >
+          </v-col>
           <v-bottom-sheet v-model="sheet" hide-overlay inset>
             <v-sheet
               class="text-center d-flex justify-center align-center"
@@ -153,43 +169,37 @@
             >
           </v-bottom-sheet>
         </v-row>
-        <v-row v-if="selected.length > 0">
-          <v-col>
-            <v-btn color="primary" dark @click="exportToUSB(false)"
-              >Export</v-btn
-            >
-          </v-col>
-          <v-dialog v-model="overwriteDialog" max-width="290" persistent>
-            <v-card>
-              <v-card-title class="headline justify-center">
-                <v-icon color="orange" size="75">mdi-information</v-icon>
-              </v-card-title>
-              <v-card-text
-                >File/Folder already exists. Do you want to overwrite it?
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                  color="green darken-1"
-                  text
-                  @click="
-                    overwriteDialog = false;
-                    sheet = true;
-                  "
-                >
-                  No
-                </v-btn>
-                <v-btn
-                  color="green darken-1"
-                  text
-                  @click.prevent="exportToUSB(true)"
-                >
-                  Yes
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-row>
+
+        <v-dialog v-model="overwriteDialog" max-width="290" persistent>
+          <v-card>
+            <v-card-title class="headline justify-center">
+              <v-icon color="orange" size="75">mdi-information</v-icon>
+            </v-card-title>
+            <v-card-text
+              >File/Folder already exists. Do you want to overwrite it?
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="green darken-1"
+                text
+                @click="
+                  overwriteDialog = false;
+                  sheet = true;
+                "
+              >
+                No
+              </v-btn>
+              <v-btn
+                color="green darken-1"
+                text
+                @click.prevent="exportToUSB(true)"
+              >
+                Yes
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-col>
     </v-row>
   </v-container>
