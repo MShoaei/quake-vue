@@ -836,8 +836,13 @@ export default {
   },
   mounted: function() {
     axios.get("/api/channels").then((resp) => {
-      console.log(resp.data);
-      // this.channels = resp.data.rx;
+      this.channels = resp.channels;
+    });
+    axios.get("/api/gains").then((resp) => {
+      for (let i = 0; i < resp.gains.length; i++) {
+        const gain = resp.gains[i];
+        this.gains[i + 1]["g" + gain] = gain;
+      }
     });
   },
 };
