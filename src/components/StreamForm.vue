@@ -72,7 +72,7 @@ export default Vue.extend({
     stream: function() {
       let streamArea = document.getElementById("streamArea");
       axios
-        .post("/api/readlive", JSON.stringify(this.form))
+        .post("/api/readlive", this.form)
         .then(() => {
           let conn = new WebSocket(
             "ws://" + window.location.host + "/api/readlive"

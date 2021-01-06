@@ -1,7 +1,17 @@
 <template>
-  <div>
-    <vue-plotly ref="plot" :data="data" :layout="layout" :options="options" />
-  </div>
+  <v-col>
+    <v-btn icon outlined large color="primary" link to="/">
+      <v-icon dark>mdi-arrow-left</v-icon>
+    </v-btn>
+    <div>
+      <vue-plotly
+        ref="plot"
+        :data="plotData"
+        :layout="layout"
+        :options="options"
+      />
+    </div>
+  </v-col>
 </template>
 
 <script>
@@ -12,156 +22,17 @@ import router from "@/router";
 export default {
   name: "PlotStream",
   components: {
-    VuePlotly
+    VuePlotly,
   },
   data() {
     return {
       i: 0,
       delay: 1,
+      window: 1,
       globalY: [],
       form: router.currentRoute.query,
-      data: [
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC0.0",
-          marker: { color: "blue" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC0.1",
-          marker: { color: "blue" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC0.2",
-          marker: { color: "blue" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC0.3",
-          marker: { color: "blue" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC1.0",
-          marker: { color: "green" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC1.1",
-          marker: { color: "green" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC1.2",
-          marker: { color: "green" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC1.3",
-          marker: { color: "green" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC2.0",
-          marker: { color: "orange" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC2.1",
-          marker: { color: "orange" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC2.2",
-          marker: { color: "orange" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC2.3",
-          marker: { color: "orange" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC3.0",
-          marker: { color: "red" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC3.1",
-          marker: { color: "red" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC3.2",
-          marker: { color: "red" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC3.3",
-          marker: { color: "red" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC5.0",
-          marker: { color: "black" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC5.1",
-          marker: { color: "black" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC5.2",
-          marker: { color: "black" }
-        },
-        {
-          y: this.globalY,
-          x: [],
-          type: "scatter",
-          name: "ADC5.3",
-          marker: { color: "black" }
-        }
-      ],
+      plotData: [],
+      movingAverage: [],
       layout: {
         // width: 320,
         height: 800,
@@ -169,51 +40,70 @@ export default {
         hovermode: false,
         dragmode: "pan",
         transition: {
-          duration: 0
+          duration: 0,
         },
         title: "A Fancy Plot",
         yaxis: {
-          visible: true
+          visible: true,
         },
         xaxis: {
           visible: true,
-          range: [-10000000, 10000000]
-        }
+          // range: [-100000000,100000000]
+        },
       },
       options: {
         displayModeBar: true,
         displaylogo: false,
         responsive: true,
         autoScale: false,
-        doubleClickDelay: 1,
+        doubleClickDelay: 100,
         modeBarButtonsToRemove: [
           "toImage",
           "autoScale2d",
           "zoomIn2d",
           "zoomOut2d",
           "toggleSpikelines",
-          "hoverCompareCartesian"
-        ]
-      }
+          "hoverCompareCartesian",
+        ],
+      },
     };
   },
-  mounted() {
-    return axios
+  created: function() {
+    axios
       .post("/api/plot", this.form)
-      .then(resp => {
+      .then((resp) => {
+        console.log(resp.data);
         let size = resp.data.size;
         this.i = 0;
-        for (let i = 0; i < this.data.length; i++) {
-          this.data[i].x = Array(size);
-          for (let j = 0; j < size; j++) {
-            this.data[i].x[j] = j * 50000;
-          }
+        if (this.form.window === undefined) {
+          this.window = resp.data.window;
+        }
+        this.globalY = Array(size);
+        for (let i = 0; i < size; i++) {
+          this.globalY[i] = i;
         }
 
-        this.data.globalY = Array(size);
-        for (let i = 0; i < size; i++) {
-          this.data.globalY[i] = i;
+        let channels = resp.data.channels;
+        for (let i = 0; i < channels.length; i++) {
+          if (channels[i]) {
+            this.plotData.push({
+              y: this.globalY,
+              x: Array(size),
+              type: "scatter",
+              name: "Channel " + (i + 1),
+              marker: { color: "red" },
+            });
+            this.movingAverage.push({
+              sum: 0,
+              x: new Array(size),
+            });
+          }
         }
+        this.layout.xaxis.range = [
+          this.plotData.length * 5000000,
+          this.plotData.length * -5000000,
+        ];
+        this.$set(this.layout.xaxis.range, 1, this.plotData.length * 5000000);
       })
       .then(() => {
         let conn = new WebSocket(
@@ -223,24 +113,46 @@ export default {
             router.currentRoute.query.file
         );
         conn.binaryType = "arraybuffer";
-        conn.onmessage = event => {
+        conn.onmessage = (event) => {
           let view = new Int32Array(event.data);
-          for (let i = 0; i < this.data.length; i++) {
-            this.data[i].x[this.i] = view[i] + i * 50000;
+          for (let i = 0; i < this.plotData.length; i++) {
+            this.plotData[i].x[this.i] = view[i] + i * 50000;
+            if (this.window == 1) {
+              continue;
+            }
+            if (this.i < this.window) {
+              this.movingAverage[i].sum += view[i] + i * 50000;
+              this.movingAverage[i].x[this.i] =
+                this.movingAverage[i].sum / this.i;
+            } else {
+              this.movingAverage[i].sum += view[i] + i * 50000;
+              this.movingAverage[i].sum -= this.plotData[i].x[
+                this.i - this.window
+              ];
+              this.movingAverage[i].x[this.i] =
+                this.movingAverage[i].sum / this.window;
+            }
           }
           this.i++;
         };
         conn.onclose = () => {
-          this.$set(this.layout.yaxis.range, 0, this.globalY.length + 20);
-          // this.$set(this.layout.yaxis.range, 1, -10);
+          this.layout.yaxis.range = [0, this.globalY.length + 20];
+          this.$set(this.layout.yaxis.range, 1, this.globalY.length + 20);
+          this.layout.xaxis.range = [-100000000, 100000000];
+          this.$set(this.layout.yaxis.range, 1, 100000000);
+          if (this.window > 1) {
+            for (let i = 0; i < this.plotData.length; i++) {
+              this.plotData[i].x = this.movingAverage[i].x;
+            }
+          }
           this.$set(
-            this.data[this.data.length - 1].x,
+            this.plotData[this.plotData.length - 1].x,
             this.i,
-            50000 * this.data.length
+            this.plotData[this.plotData.length - 1].x[this.i]
           );
         };
       });
-  }
+  },
 };
 </script>
 

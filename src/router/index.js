@@ -1,5 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+// import Command from "@/views/Command";
+// import Setup from "@/views/Setup";
 
 Vue.use(VueRouter);
 
@@ -9,32 +11,38 @@ const routes = [
     name: "plot",
     // component: PlotStream
     component: () =>
-      import(/* webpackChunkName: "plot" */ "../views/PlotStream.vue")
+      import(/* webpackChunkName: "plot-stream" */ "../views/PlotStream.vue"),
+  },
+  {
+    path: "/info",
+    name: "info",
+    // component: Info
+    component: () => import(/* webpackChunkName: "info" */ "../views/Info.vue"),
+  },
+  {
+    path: "/command",
+    name: "command",
+    // component: Command,
+    component: () => import(/* webpackChunkName: "command" */ "../views/Command.vue")
   },
   {
     path: "/setup",
     name: "setup",
-    // component: Setup
+    // component: Setup,
+        // route level code-splitting
+    // this generates a separate chunk (setup.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "setup" */ "../views/Setup.vue")
   },
-  {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
-  },
   { path: "/", redirect: "/setup" },
-  { path: "*", redirect: "/" }
+  { path: "*", redirect: "/" },
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes
+  routes,
 });
 
 router.beforeEach((to, from, next) => {
