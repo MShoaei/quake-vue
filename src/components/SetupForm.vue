@@ -841,7 +841,7 @@ export default {
     axios.get("/api/gains").then((resp) => {
       for (let i = 0; i < resp.gains.length; i++) {
         const gain = resp.gains[i];
-        this.gains[i + 1]["g" + gain] = gain;
+        this.gains[i + 1]["g" + gain] = true;
       }
     });
   },
