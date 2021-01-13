@@ -877,11 +877,11 @@ export default {
   },
   mounted: function() {
     axios.get("/api/channels").then((resp) => {
-      this.channels = resp.channels;
+      this.channels = resp.data.channels;
     });
     axios.get("/api/gains").then((resp) => {
-      for (let i = 0; i < resp.gains.length; i++) {
-        const gain = resp.gains[i];
+      for (let i = 0; i < resp.data.gains.length; i++) {
+        const gain = resp.data.gains[i];
         this.gains[i + 1]["g" + gain] = true;
       }
     });
