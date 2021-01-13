@@ -245,6 +245,46 @@
               suffix="µV"
             ></v-text-field>
           </v-col>
+          <v-col
+            v-if="formData.startMode === 'hammer'"
+            cols="6"
+            offset-sm="6"
+            sm="4"
+          >
+            <v-subheader>Trigger Channel</v-subheader>
+          </v-col>
+          <v-col v-if="formData.startMode === 'hammer'" cols="6" sm="2">
+            <v-select
+              :items="[
+                { text: 1, value: 0 },
+                { text: 2, value: 1 },
+                { text: 3, value: 2 },
+                { text: 4, value: 3 },
+                { text: 5, value: 4 },
+                { text: 6, value: 5 },
+                { text: 7, value: 6 },
+                { text: 8, value: 7 },
+                { text: 9, value: 8 },
+                { text: 10, value: 9 },
+                { text: 11, value: 10 },
+                { text: 12, value: 11 },
+                { text: 13, value: 12 },
+                { text: 14, value: 13 },
+                { text: 15, value: 14 },
+                { text: 16, value: 15 },
+                { text: 17, value: 16 },
+                { text: 18, value: 17 },
+                { text: 19, value: 18 },
+                { text: 20, value: 19 },
+                { text: 21, value: 20 },
+                { text: 22, value: 21 },
+                { text: 23, value: 22 },
+                { text: 24, value: 23 },
+              ]"
+              v-model="formData.triggerChannel"
+            >
+            </v-select>
+          </v-col>
         </v-row>
         <v-row>
           <v-col>
@@ -729,6 +769,7 @@ export default {
     formData: {
       startMode: "asap",
       threshold: 0,
+      triggerChannel: 0,
       recordTime: 1024,
       samplingTime: 1000,
       window: 1,
