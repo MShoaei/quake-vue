@@ -39,16 +39,11 @@
                   @click="selectHalf(12, 24)"
                   >channels 13-24
                 </v-btn>
-                <v-btn block color="primary" @click="clearAll">Clear all</v-btn>
+                <v-btn block class="mb-4" color="primary" @click="clearAll"
+                  >Clear all</v-btn
+                >
+                <v-btn block color="success" @click="setChannels">OK </v-btn>
               </v-col>
-            </v-row>
-            <v-row>
-              <v-btn
-                :block="$vuetify.breakpoint.xsOnly"
-                color="success"
-                @click="setChannels"
-                >OK
-              </v-btn>
             </v-row>
           </v-container>
         </v-card-text>
@@ -60,121 +55,127 @@
         <v-card-text>
           <v-container>
             <v-row>
-              <v-data-table
-                :headers="headers"
-                :items="gains"
-                class="elevation-1"
-                item-key="channel"
-              >
-                <template v-slot:body="{ items }">
-                  <tbody>
-                    <tr v-for="item in items" :key="item.channel">
-                      <td>{{ item.channel }}</td>
-                      <td>
-                        <v-checkbox
-                          v-model="item.g0"
-                          @change="selectChannelGain(item.channel, 'g0')"
-                        ></v-checkbox>
-                      </td>
-                      <td>
-                        <v-checkbox
-                          v-model="item.g2"
-                          @change="selectChannelGain(item.channel, 'g2')"
-                        ></v-checkbox>
-                      </td>
-                      <td>
-                        <v-checkbox
-                          v-model="item.g10"
-                          @change="selectChannelGain(item.channel, 'g10')"
-                        ></v-checkbox>
-                      </td>
-                      <td>
-                        <v-checkbox
-                          v-model="item.g20"
-                          @change="selectChannelGain(item.channel, 'g20')"
-                        ></v-checkbox>
-                      </td>
-                      <td>
-                        <v-checkbox
-                          v-model="item.g50"
-                          @change="selectChannelGain(item.channel, 'g50')"
-                        ></v-checkbox>
-                      </td>
-                      <td>
-                        <v-checkbox
-                          v-model="item.g100"
-                          @change="selectChannelGain(item.channel, 'g100')"
-                        ></v-checkbox>
-                      </td>
-                      <td>
-                        <v-checkbox
-                          v-model="item.g200"
-                          @change="selectChannelGain(item.channel, 'g200')"
-                        ></v-checkbox>
-                      </td>
-                      <td>
-                        <v-checkbox
-                          v-model="item.g500"
-                          @change="selectChannelGain(item.channel, 'g500')"
-                        ></v-checkbox>
-                      </td>
-                      <td>
-                        <v-checkbox
-                          v-model="item.g1000"
-                          @change="selectChannelGain(item.channel, 'g1000')"
-                        ></v-checkbox>
-                      </td>
-                      <td>
-                        <v-checkbox
-                          v-model="item.g5000"
-                          @change="selectChannelGain(item.channel, 'g5000')"
-                        ></v-checkbox>
-                      </td>
-                      <td>
-                        <v-checkbox
-                          v-model="item.g10000"
-                          @change="selectChannelGain(item.channel, 'g10000')"
-                        ></v-checkbox>
-                      </td>
-                      <td>
-                        <v-checkbox
-                          v-model="item.g15000"
-                          @change="selectChannelGain(item.channel, 'g15000')"
-                        ></v-checkbox>
-                      </td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-data-table>
-            </v-row>
-            <v-row>
-              <v-btn
-                :block="$vuetify.breakpoint.xsOnly"
-                class="mt-2"
-                color="success"
-                @click="setGains"
-                >OK
-              </v-btn>
+              <v-col>
+                <v-data-table
+                  :headers="headers"
+                  :items="gains"
+                  class="elevation-1"
+                  item-key="channel"
+                >
+                  <template v-slot:body="{ items }">
+                    <tbody>
+                      <tr v-for="item in items" :key="item.channel">
+                        <td>{{ item.channel }}</td>
+                        <td>
+                          <v-checkbox
+                            v-model="item.g1"
+                            @change="selectChannelGain(item.channel, 'g1')"
+                          ></v-checkbox>
+                        </td>
+                        <td>
+                          <v-checkbox
+                            v-model="item.g2"
+                            @change="selectChannelGain(item.channel, 'g2')"
+                          ></v-checkbox>
+                        </td>
+                        <td>
+                          <v-checkbox
+                            v-model="item.g10"
+                            @change="selectChannelGain(item.channel, 'g10')"
+                          ></v-checkbox>
+                        </td>
+                        <td>
+                          <v-checkbox
+                            v-model="item.g20"
+                            @change="selectChannelGain(item.channel, 'g20')"
+                          ></v-checkbox>
+                        </td>
+                        <td>
+                          <v-checkbox
+                            v-model="item.g50"
+                            @change="selectChannelGain(item.channel, 'g50')"
+                          ></v-checkbox>
+                        </td>
+                        <td>
+                          <v-checkbox
+                            v-model="item.g100"
+                            @change="selectChannelGain(item.channel, 'g100')"
+                          ></v-checkbox>
+                        </td>
+                        <td>
+                          <v-checkbox
+                            v-model="item.g200"
+                            @change="selectChannelGain(item.channel, 'g200')"
+                          ></v-checkbox>
+                        </td>
+                        <td>
+                          <v-checkbox
+                            v-model="item.g500"
+                            @change="selectChannelGain(item.channel, 'g500')"
+                          ></v-checkbox>
+                        </td>
+                        <td>
+                          <v-checkbox
+                            v-model="item.g1000"
+                            @change="selectChannelGain(item.channel, 'g1000')"
+                          ></v-checkbox>
+                        </td>
+                        <td>
+                          <v-checkbox
+                            v-model="item.g5000"
+                            @change="selectChannelGain(item.channel, 'g5000')"
+                          ></v-checkbox>
+                        </td>
+                        <td>
+                          <v-checkbox
+                            v-model="item.g10000"
+                            @change="selectChannelGain(item.channel, 'g10000')"
+                          ></v-checkbox>
+                        </td>
+                        <td>
+                          <v-checkbox
+                            v-model="item.g15000"
+                            @change="selectChannelGain(item.channel, 'g15000')"
+                          ></v-checkbox>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-data-table>
+                <v-btn block class="mt-4" color="success" @click="setGains"
+                  >OK
+                </v-btn>
+              </v-col>
             </v-row>
           </v-container>
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="samplingCompleteDialog" max-width="290" persistent>
+    <v-dialog v-model="samplingCompleteDialog" max-width="600px">
       <v-card>
         <v-card-title class="headline justify-center">
           <v-icon color="green" size="75">mdi-check-circle</v-icon>
         </v-card-title>
         <v-card-text
           >Sampling is done. Do you want to see the plot?
+          <v-container>
+            <v-row>
+              <v-col>
+                <v-radio-group label="Plot Direction" v-model="plotDirection">
+                  <v-radio
+                    v-for="(dir, i) in ['top to bottom ↓', 'bottom to top ↑']"
+                    :key="i"
+                    :label="dir"
+                    :value="i"
+                  ></v-radio>
+                </v-radio-group>
+              </v-col>
+            </v-row>
+          </v-container>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            color="green darken-1"
-            text
-            @click="samplingCompleteDialog = false"
-          >
+          <v-btn text @click="samplingCompleteDialog = false">
             No
           </v-btn>
           <v-btn color="green darken-1" text @click.prevent="showPlot">
@@ -192,7 +193,7 @@
         started. Please wait...
       </v-sheet>
     </v-bottom-sheet>
-    <div>
+    <div id="setup-form">
       <v-form @submit.prevent="setupDevice">
         <v-row>
           <v-col cols="6" lg="3">
@@ -255,32 +256,7 @@
           </v-col>
           <v-col v-if="formData.startMode === 'hammer'" cols="6" sm="2">
             <v-select
-              :items="[
-                { text: 1, value: 0 },
-                { text: 2, value: 1 },
-                { text: 3, value: 2 },
-                { text: 4, value: 3 },
-                { text: 5, value: 4 },
-                { text: 6, value: 5 },
-                { text: 7, value: 6 },
-                { text: 8, value: 7 },
-                { text: 9, value: 8 },
-                { text: 10, value: 9 },
-                { text: 11, value: 10 },
-                { text: 12, value: 11 },
-                { text: 13, value: 12 },
-                { text: 14, value: 13 },
-                { text: 15, value: 14 },
-                { text: 16, value: 15 },
-                { text: 17, value: 16 },
-                { text: 18, value: 17 },
-                { text: 19, value: 18 },
-                { text: 20, value: 19 },
-                { text: 21, value: 20 },
-                { text: 22, value: 21 },
-                { text: 23, value: 22 },
-                { text: 24, value: 23 },
-              ]"
+              :items="triggerChannelsList"
               v-model="formData.triggerChannel"
             >
             </v-select>
@@ -299,14 +275,17 @@
               label="File name"
             ></v-text-field>
           </v-col>
+          <v-col>
+            <v-btn
+              block
+              :loading="loading"
+              color="success"
+              type="submit"
+              @click.prevent="setupDevice"
+              >Start
+            </v-btn>
+          </v-col>
         </v-row>
-        <v-btn
-          :loading="loading"
-          color="primary"
-          type="submit"
-          @click.prevent="setupDevice"
-          >Start
-        </v-btn>
       </v-form>
     </div>
   </div>
@@ -376,7 +355,7 @@ export default {
         sortable: false,
         value: "channel",
       },
-      { text: "0", sortable: false, value: "g0" },
+      { text: "1", sortable: false, value: "g1" },
       { text: "2", sortable: false, value: "g2" },
       { text: "10", sortable: false, value: "g10" },
       { text: "20", sortable: false, value: "g20" },
@@ -392,7 +371,7 @@ export default {
     gains: [
       {
         channel: "All",
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -407,7 +386,7 @@ export default {
       },
       {
         channel: 1,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -422,7 +401,7 @@ export default {
       },
       {
         channel: 2,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -437,7 +416,7 @@ export default {
       },
       {
         channel: 3,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -452,7 +431,7 @@ export default {
       },
       {
         channel: 4,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -467,7 +446,7 @@ export default {
       },
       {
         channel: 5,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -482,7 +461,7 @@ export default {
       },
       {
         channel: 6,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -497,7 +476,7 @@ export default {
       },
       {
         channel: 7,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -512,7 +491,7 @@ export default {
       },
       {
         channel: 8,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -527,7 +506,7 @@ export default {
       },
       {
         channel: 9,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -542,7 +521,7 @@ export default {
       },
       {
         channel: 10,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -557,7 +536,7 @@ export default {
       },
       {
         channel: 11,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -572,7 +551,7 @@ export default {
       },
       {
         channel: 12,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -587,7 +566,7 @@ export default {
       },
       {
         channel: 13,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -602,7 +581,7 @@ export default {
       },
       {
         channel: 14,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -617,7 +596,7 @@ export default {
       },
       {
         channel: 15,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -632,7 +611,7 @@ export default {
       },
       {
         channel: 16,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -647,7 +626,7 @@ export default {
       },
       {
         channel: 17,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -662,7 +641,7 @@ export default {
       },
       {
         channel: 18,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -677,7 +656,7 @@ export default {
       },
       {
         channel: 19,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -692,7 +671,7 @@ export default {
       },
       {
         channel: 20,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -707,7 +686,7 @@ export default {
       },
       {
         channel: 21,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -722,7 +701,7 @@ export default {
       },
       {
         channel: 22,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -737,7 +716,7 @@ export default {
       },
       {
         channel: 23,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -752,7 +731,7 @@ export default {
       },
       {
         channel: 24,
-        g0: false,
+        g1: false,
         g2: false,
         g10: false,
         g20: false,
@@ -766,6 +745,9 @@ export default {
         g15000: false,
       },
     ],
+    triggerChannelsList: [],
+    plotDirection: 0,
+
     formData: {
       startMode: "asap",
       threshold: 0,
@@ -845,20 +827,25 @@ export default {
               : this.formData.projectName) +
             "/" +
             this.formData.fileName,
+          direction: this.plotDirection,
         },
       });
     },
     setChannels: function() {
       this.channelDialog = false;
+      this.triggerChannelsList = [];
+      for (let i = 0; i < this.channels.length; i++) {
+        const ch = this.channels[i];
+        if (ch) {
+          this.triggerChannelsList.push({ text: i + 1, value: i });
+        }
+      }
       axios.post("/api/channels", this.channels).then((resp) => {
         console.log(resp.data);
       });
     },
     setGains: function() {
       let gains = new Array(24);
-      for (let i = 0; i < gains.length; i++) {
-        gains[i] = 0;
-      }
       for (let i = 0; i < 24; i++) {
         Object.keys(this.gains[i + 1]).forEach((value) => {
           if (
@@ -889,4 +876,4 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped></style>
