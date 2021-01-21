@@ -11,6 +11,118 @@
         :options="options"
       />
     </div>
+    <v-row>
+      <v-dialog v-model="overwriteDialog" max-width="290" persistent>
+        <v-card>
+          <v-card-title class="headline justify-center">
+            <v-icon color="orange" size="75">mdi-information</v-icon>
+          </v-card-title>
+          <v-card-text
+            >File/Folder already exists. Do you want to overwrite it?
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="green darken-1"
+              text
+              @click="
+                overwriteDialog = false;
+                sheet = true;
+              "
+            >
+              No
+            </v-btn>
+            <v-btn
+              color="green darken-1"
+              text
+              @click.prevent="exportToUSB(true)"
+            >
+              Yes
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-col cols="6">
+        <v-dialog v-model="dialogExport" max-width="600px">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn block color="primary" v-bind="attrs" v-on="on">
+              Export
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title class="headline">
+              Select Export File Type
+            </v-card-title>
+
+            <v-container>
+              <v-row>
+                <v-col>
+                  <v-select
+                    label="Option"
+                    :items="['Download', 'Save to USB']"
+                    v-model="exportOption"
+                  >
+                  </v-select>
+                </v-col>
+                <v-col>
+                  <v-select
+                    label="File Type"
+                    :items="['Raw binary', 'SEG2']"
+                    v-model="exportFileType"
+                  >
+                  </v-select>
+                </v-col>
+              </v-row>
+            </v-container>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn text @click="dialogExport = false">
+                Cancel
+              </v-btn>
+              <v-btn
+                text
+                color="green"
+                @click="
+                  exportToUSB(false);
+                  dialogExport = false;
+                "
+                >OK</v-btn
+              >
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-col>
+      <v-col cols="6">
+        <v-dialog v-model="dialogDelete" persistent max-width="600px">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              block
+              class="white-text"
+              color="red"
+              v-bind="attrs"
+              v-on="on"
+            >
+              Delete
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title class="headline"> Confirm Deletion </v-card-title>
+            <v-card-text
+              >You are deleting a project/file. Are you sure? This action is NOT
+              reversable.</v-card-text
+            >
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn text @click="dialogDelete = false"> Cancel </v-btn>
+              <v-btn color="red darken-1" text @click="deleteFile">
+                Delete
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-col>
+    </v-row>
   </v-col>
 </template>
 
@@ -26,6 +138,12 @@ export default {
   },
   data() {
     return {
+      dialogDelete: false,
+      dialogExport: false,
+      exportOption: "",
+      exportFileType: "",
+      overwriteDialog: false,
+
       i: 0,
       delay: 1,
       window: 1,
@@ -67,6 +185,65 @@ export default {
         ],
       },
     };
+  },
+  methods: {
+    exportToUSB(force) {
+      let apiPath = "";
+      let form = {};
+      if (this.selected[0].children === undefined) {
+        apiPath = "/api/save/sample";
+        form["file"] = this.selected[0].path;
+      } else {
+        apiPath = "/api/save/project";
+        form["project"] = this.selected[0].path;
+      }
+
+      apiPath += "?option=" + this.exportOption;
+      apiPath += "?type=" + this.exportFileType;
+
+      if (force) {
+        apiPath = apiPath + "?force=true";
+        axios
+          .post(apiPath, form)
+          .then(() => {
+            this.exportResponse.success = true;
+            this.exportResponse.message = "Successfully saved data to USB";
+          })
+          .catch((error) => {
+            this.exportResponse.success = false;
+            this.exportResponse.message = error.response.data.error;
+          })
+          .then(() => {
+            this.sheet = true;
+          });
+      } else {
+        axios
+          .post(apiPath, form)
+          .then(() => {
+            this.exportResponse.success = true;
+            this.exportResponse.message = "Successfully saved data to USB";
+            this.sheet = true;
+          })
+          .catch((error) => {
+            this.exportResponse.success = false;
+            this.exportResponse.message = error.response.data.error;
+            if (error.response.data.error.includes("exists")) {
+              this.overwriteDialog = true;
+            } else {
+              this.sheet = true;
+            }
+          });
+      }
+    },
+    deleteFile() {
+      axios
+        .delete("/api/tree" + "/" + this.form.file)
+        .then(() => {
+          router.replace("/setup");
+        })
+        .catch(() => {});
+      this.dialogDelete = false;
+    },
   },
   created: function() {
     axios
@@ -136,10 +313,13 @@ export default {
           this.i++;
         };
         conn.onclose = () => {
-          this.layout.yaxis.range = [0, this.globalY.length + 20];
-          this.$set(this.layout.yaxis.range, 1, this.globalY.length + 20);
+          this.layout.yaxis.range =
+            this.form.direction === "0"
+              ? [this.globalY.length + 20, 0]
+              : [0, this.globalY.length + 20];
+          this.$set(this.layout.yaxis.range, 1, this.layout.yaxis.range[1]);
           this.layout.xaxis.range = [-100000000, 100000000];
-          this.$set(this.layout.yaxis.range, 1, 100000000);
+          // this.$set(this.layout.yaxis.range, 1, 100000000);
           if (this.window > 1) {
             for (let i = 0; i < this.plotData.length; i++) {
               this.plotData[i].x = this.movingAverage[i].x;
