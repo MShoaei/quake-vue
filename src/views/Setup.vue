@@ -3,7 +3,7 @@
     <SetupForm />
     <v-row>
       <v-col cols="12" md="8">
-        <v-card class="mt-5">
+        <v-card>
           <v-card-title class="primary white--text headline">
             Data Directory
           </v-card-title>
@@ -25,12 +25,8 @@
       </v-col>
       <v-col cols="12" md="4">
         <v-row v-if="selected.length > 0">
-          <v-col cols="6" md="4">
-            <v-dialog
-              v-model="dialogAverageWindow"
-              persistent
-              max-width="600px"
-            >
+          <v-col cols="6" md="12">
+            <v-dialog v-model="dialogAverageWindow" max-width="600px">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   block
@@ -46,22 +42,38 @@
                 >
               </template>
               <v-card>
-                <v-card-title class="headline"
-                  >Select Averaging Window</v-card-title
-                >
+                <v-card-title class="headline">Plot Options</v-card-title>
                 <v-card-text>
-                  <v-row>
-                    <v-col cols="3">
-                      <v-subheader>Averaging window</v-subheader>
-                    </v-col>
-                    <v-col cols="2">
-                      <v-text-field
-                        :rules="[rules.inRange]"
-                        v-model.number="window"
-                      >
-                      </v-text-field>
-                    </v-col>
-                  </v-row>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="9" sm="4">
+                        <v-text-field
+                          label="Averaging window"
+                          :rules="[rules.inRange]"
+                          v-model.number="window"
+                        >
+                        </v-text-field>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col>
+                        <v-radio-group
+                          label="Plot Direction"
+                          v-model="plotDirection"
+                        >
+                          <v-radio
+                            v-for="(dir, i) in [
+                              'top to bottom ↓',
+                              'bottom to top ↑',
+                            ]"
+                            :key="i"
+                            :label="dir"
+                            :value="i"
+                          ></v-radio>
+                        </v-radio-group>
+                      </v-col>
+                    </v-row>
+                  </v-container>
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
@@ -75,8 +87,59 @@
               </v-card>
             </v-dialog>
           </v-col>
-          <v-col cols="6" md="4">
-            <v-dialog v-model="dialogEdit" persistent max-width="600px">
+          <v-col cols="6" md="12">
+            <v-dialog v-model="dialogExport" max-width="600px">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn block color="primary" v-bind="attrs" v-on="on">
+                  Export
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title class="headline">
+                  Select Export File Type
+                </v-card-title>
+
+                <v-container>
+                  <v-row>
+                    <v-col>
+                      <v-select
+                        label="Option"
+                        :items="['Download', 'Save to USB']"
+                        v-model="exportOption"
+                      >
+                      </v-select>
+                    </v-col>
+                    <v-col>
+                      <v-select
+                        label="File Type"
+                        :items="['Raw binary', 'SEG2']"
+                        v-model="exportFileType"
+                      >
+                      </v-select>
+                    </v-col>
+                  </v-row>
+                </v-container>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn text @click="dialogExport = false">
+                    Cancel
+                  </v-btn>
+                  <v-btn
+                    text
+                    color="green"
+                    @click="
+                      exportToUSB(false);
+                      dialogExport = false;
+                    "
+                    >OK</v-btn
+                  >
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-col>
+          <v-col cols="6" md="12">
+            <v-dialog v-model="dialogEdit" max-width="600px">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn block color="primary" v-bind="attrs" v-on="on"
                   >Edit</v-btn
@@ -122,8 +185,8 @@
               </v-card>
             </v-dialog>
           </v-col>
-          <v-col cols="6" md="4">
-            <v-dialog v-model="dialogDelete" persistent max-width="600px">
+          <v-col cols="6" md="12">
+            <v-dialog v-model="dialogDelete" max-width="600px">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   block
@@ -151,11 +214,6 @@
               </v-card>
             </v-dialog>
           </v-col>
-          <v-col cols="6" md="4">
-            <v-btn block color="primary" @click="exportToUSB(false)"
-              >Export</v-btn
-            >
-          </v-col>
           <v-bottom-sheet v-model="sheet" hide-overlay inset>
             <v-sheet
               class="text-center d-flex justify-center align-center"
@@ -170,7 +228,7 @@
           </v-bottom-sheet>
         </v-row>
 
-        <v-dialog v-model="overwriteDialog" max-width="290" persistent>
+        <v-dialog v-model="overwriteDialog" max-width="290">
           <v-card>
             <v-card-title class="headline justify-center">
               <v-icon color="orange" size="75">mdi-information</v-icon>
@@ -273,10 +331,15 @@ export default {
     dialogAverageWindow: false,
     dialogEdit: false,
     dialogDelete: false,
+    dialogExport: false,
     exportResponse: {
       success: false,
       message: "",
     },
+    exportOption: "",
+
+    exportFileType: "",
+    plotDirection: 0,
     overwriteDialog: false,
     sheet: false,
     newName: "",
@@ -329,6 +392,9 @@ export default {
         form["project"] = this.selected[0].path;
       }
 
+      apiPath += "?option=" + this.exportOption;
+      apiPath += "?type=" + this.exportFileType;
+
       if (force) {
         apiPath = apiPath + "?force=true";
         axios
@@ -370,6 +436,7 @@ export default {
         query: {
           file: this.selected[0].path,
           window: this.window,
+          direction: this.plotDirection,
         },
       });
     },
