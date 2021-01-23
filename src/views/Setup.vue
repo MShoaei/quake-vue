@@ -90,7 +90,13 @@
           <v-col cols="6" md="12">
             <v-dialog v-model="dialogExport" max-width="600px">
               <template v-slot:activator="{ on, attrs }">
-                <v-btn block color="primary" v-bind="attrs" v-on="on">
+                <v-btn
+                  :disabled="!usbConnected"
+                  block
+                  color="primary"
+                  v-bind="attrs"
+                  v-on="on"
+                >
                   Export
                 </v-btn>
               </template>
@@ -104,7 +110,7 @@
                     <v-col>
                       <v-select
                         label="Option"
-                        :items="['Download', 'Save to USB']"
+                        :items="allowedExportOption"
                         v-model="exportOption"
                       >
                       </v-select>
@@ -128,8 +134,8 @@
                   <v-btn
                     text
                     color="green"
-                    @click="
-                      exportToUSB(false);
+                    @click.prevent="
+                      exportFunc(false);
                       dialogExport = false;
                     "
                     >OK</v-btn
@@ -251,7 +257,7 @@
               <v-btn
                 color="green darken-1"
                 text
-                @click.prevent="exportToUSB(true)"
+                @click.prevent="exportFunc(true)"
               >
                 Yes
               </v-btn>
@@ -290,6 +296,14 @@ export default {
   },
   mounted() {
     axios
+      .get("/api/usb")
+      .then(() => {
+        this.usbConnected = true;
+      })
+      .catch(() => {
+        this.usbConnected = false;
+      });
+    axios
       .get("/api/tree/")
       .then((resp) => {
         for (const item of resp.data.items) {
@@ -325,6 +339,13 @@ export default {
     plotPath() {
       return "/plot?file=" + this.selected[0].path;
     },
+    allowedExportOption() {
+      let list = ["Save to USB"];
+      if (this.selected[0].children === undefined) {
+        list = ["Download", "Save to USB"];
+      }
+      return list;
+    },
   },
   data: () => ({
     window: 1,
@@ -337,8 +358,9 @@ export default {
       message: "",
     },
     exportOption: "",
-
     exportFileType: "",
+    usbConnected: false,
+
     plotDirection: 0,
     overwriteDialog: false,
     sheet: false,
@@ -381,9 +403,13 @@ export default {
         this.window = resp.data.window;
       });
     },
-    exportToUSB(force) {
+    exportFunc(force) {
       let apiPath = "";
       let form = {};
+      if (this.exportOption === "Download") {
+        this.downloadFile();
+        return;
+      }
       if (this.selected[0].children === undefined) {
         apiPath = "/api/save/sample";
         form["file"] = this.selected[0].path;
@@ -392,6 +418,9 @@ export default {
         form["project"] = this.selected[0].path;
       }
 
+      // if (this.exportOption === "Download") {
+      // } else if (this.exportOption === "Save to USB") {
+      // }
       apiPath += "?option=" + this.exportOption;
       apiPath += "?type=" + this.exportFileType;
 
@@ -428,6 +457,31 @@ export default {
             }
           });
       }
+    },
+    downloadFile() {
+      let type = "";
+      switch (this.exportFileType) {
+        case "SEG2":
+          type = "seg2";
+          break;
+        case "Raw binary":
+          type = "raw";
+          break;
+      }
+
+      axios
+        .get("/api/dl" + this.selected[0].path + "?type=" + type)
+        .then((response) => {
+          const blob = new Blob([response.data], {
+            type: "application/octet-stream",
+          });
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = this.selected[0].name;
+          link.click();
+          URL.revokeObjectURL(link.href);
+        })
+        .catch((error) => console.log(error));
     },
     showPlot() {
       router.push({
