@@ -89,9 +89,10 @@
               <v-btn
                 v-bind="attrs"
                 v-on="on"
-                :disabled="canExport"
+                :disabled="exportDisabled"
                 block
                 color="primary"
+                @click="exportOption = 'save'"
               >
                 Export
               </v-btn>
@@ -359,11 +360,12 @@ export default {
       }
       return list;
     },
-    canExport() {
+    exportDisabled() {
       let list = this.allowedExportOption;
       return list[0].disabled && list[1].disabled;
     },
   },
+
   methods: {
     async fetchDir(item) {
       return axios
