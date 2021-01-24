@@ -12,6 +12,18 @@
       />
     </div>
     <v-row>
+      <v-bottom-sheet v-model="sheet" hide-overlay inset>
+        <v-sheet
+          class="text-center d-flex justify-center align-center"
+          height="100px"
+        >
+          <v-icon v-if="exportResponse.success" color="green" large
+            >mdi-check-circle
+          </v-icon>
+          <v-icon v-else color="red" large>mdi-information </v-icon>
+          {{ exportResponse.message }}
+        </v-sheet>
+      </v-bottom-sheet>
       <v-dialog v-model="overwriteDialog" max-width="290" persistent>
         <v-card>
           <v-card-title class="headline justify-center">
@@ -35,7 +47,10 @@
             <v-btn
               color="green darken-1"
               text
-              @click.prevent="exportFunc(true)"
+              @click.prevent="
+                exportFunc(true);
+                overwriteDialog = false;
+              "
             >
               Yes
             </v-btn>
@@ -149,6 +164,11 @@ export default {
       exportOption: "save",
       exportFileType: "seg2",
       overwriteDialog: false,
+      exportResponse: {
+        success: false,
+        message: "",
+      },
+      sheet: false,
 
       i: 0,
       delay: 1,
@@ -206,7 +226,7 @@ export default {
       apiPath += "?type=" + this.exportFileType;
 
       if (force) {
-        apiPath = apiPath + "?force=true";
+        apiPath = apiPath + "&force=true";
         axios
           .post(apiPath, form)
           .then(() => {
