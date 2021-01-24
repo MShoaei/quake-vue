@@ -1,13 +1,13 @@
 <template>
   <v-container>
-    <SetupForm/>
-    <DataTree/>
+    <SetupForm />
+    <DataTree />
   </v-container>
 </template>
 
 <script>
 import SetupForm from "@/components/SetupForm";
-import DataTree from "@/views/DataTree";
+import DataTree from "@/components/DataTree";
 
 export default {
   name: "Setup",
@@ -17,4 +17,3 @@ export default {
   },
 };
 </script>
-

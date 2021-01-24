@@ -59,7 +59,10 @@
                 <v-col>
                   <v-select
                     label="Option"
-                    :items="['Download', 'Save to USB']"
+                    :items="[
+                      { text: 'Download', value: 'download', disabled: false },
+                      { text: 'Save to USB', value: 'save', disabled: false },
+                    ]"
                     v-model="exportOption"
                   >
                   </v-select>
@@ -67,7 +70,10 @@
                 <v-col>
                   <v-select
                     label="File Type"
-                    :items="['Raw binary', 'SEG2']"
+                    :items="[
+                      { text: 'Raw binary', value: 'raw' },
+                      { text: 'SEG2', value: 'seg2' },
+                    ]"
                     v-model="exportFileType"
                   >
                   </v-select>
@@ -140,8 +146,8 @@ export default {
     return {
       dialogDelete: false,
       dialogExport: false,
-      exportOption: "",
-      exportFileType: "",
+      exportOption: "save",
+      exportFileType: "seg2",
       overwriteDialog: false,
 
       i: 0,
@@ -188,7 +194,7 @@ export default {
   },
   methods: {
     exportFunc(force) {
-      if (this.exportOption === "Download") {
+      if (this.exportOption === "download") {
         this.downloadFile();
         return;
       }
@@ -234,18 +240,8 @@ export default {
       }
     },
     downloadFile() {
-      let type = "";
-      switch (this.exportFileType) {
-        case "SEG2":
-          type = "seg2";
-          break;
-        case "Raw binary":
-          type = "raw";
-          break;
-      }
-
       axios
-        .get("/api/dl" + this.form.file + "?type=" + type)
+        .get("/api/dl" + this.form.file + "?type=" + this.exportFileType)
         .then((response) => {
           let fileName = response.headers["content-disposition"]
             .split(";")[1]
