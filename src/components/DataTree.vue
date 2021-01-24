@@ -89,7 +89,7 @@
               <v-btn
                 v-bind="attrs"
                 v-on="on"
-                :disabled="!usbConnected"
+                :disabled="canExport"
                 block
                 color="primary"
               >
@@ -114,7 +114,10 @@
                   <v-col>
                     <v-select
                       v-model="exportFileType"
-                      :items="['Raw binary', 'SEG2']"
+                      :items="[
+                        { text: 'Raw binary', value: 'raw' },
+                        { text: 'SEG2', value: 'seg2' },
+                      ]"
                       label="File Type"
                     >
                     </v-select>
@@ -253,7 +256,10 @@
             <v-btn
               color="green darken-1"
               text
-              @click.prevent="exportFunc(true)"
+              @click.prevent="
+                exportFunc(true);
+                overwriteDialog = false;
+              "
             >
               Yes
             </v-btn>
@@ -311,9 +317,8 @@ export default {
       success: false,
       message: "",
     },
-    exportOption: "",
-    exportFileType: "",
-    usbConnected: false,
+    exportOption: "save",
+    exportFileType: "seg2",
 
     plotDirection: 0,
     overwriteDialog: false,
@@ -342,11 +347,21 @@ export default {
       return "/plot?file=" + this.selected[0].path;
     },
     allowedExportOption() {
-      let list = ["Save to USB"];
-      if (this.selected[0].children === undefined) {
-        list = ["Download", "Save to USB"];
+      let list = [
+        { text: "Download", value: "download", disabled: false },
+        { text: "Save to USB", value: "save", disabled: false },
+      ];
+      if (this.selected[0].children !== undefined) {
+        list[0].disabled = true;
+      }
+      if (!this.usbConnected) {
+        list[0].disabled = true;
       }
       return list;
+    },
+    canExport() {
+      let list = this.allowedExportOption;
+      return list[0].disabled && list[1].disabled;
     },
   },
   methods: {
@@ -402,32 +417,25 @@ export default {
       });
     },
     downloadFile() {
-      let type = "";
-      switch (this.exportFileType) {
-        case "SEG2":
-          type = "seg2";
-          break;
-        case "Raw binary":
-          type = "raw";
-          break;
-      }
-
       axios
-        .get("/api/dl" + this.selected[0].path + "?type=" + type)
+        .get("/api/dl" + this.selected[0].path + "?type=" + this.exportFileType)
         .then((response) => {
+          let fileName = response.headers["content-disposition"]
+            .split(";")[1]
+            .split("=")[1];
           const blob = new Blob([response.data], {
             type: "application/octet-stream",
           });
           const link = document.createElement("a");
           link.href = URL.createObjectURL(blob);
-          link.download = this.selected[0].name;
+          link.download = fileName;
           link.click();
           URL.revokeObjectURL(link.href);
         })
         .catch((error) => console.log(error));
     },
     exportFunc(force) {
-      if (this.exportOption === "Download") {
+      if (this.exportOption === "download") {
         this.downloadFile();
         return;
       }
@@ -444,11 +452,10 @@ export default {
       // if (this.exportOption === "Download") {
       // } else if (this.exportOption === "Save to USB") {
       // }
-      apiPath += "?option=" + this.exportOption;
       apiPath += "?type=" + this.exportFileType;
 
       if (force) {
-        apiPath = apiPath + "?force=true";
+        apiPath = apiPath + "&force=true";
         axios
           .post(apiPath, form)
           .then(() => {
