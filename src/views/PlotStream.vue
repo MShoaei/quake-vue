@@ -35,7 +35,7 @@
             <v-btn
               color="green darken-1"
               text
-              @click.prevent="exportToUSB(true)"
+              @click.prevent="exportFunc(true)"
             >
               Yes
             </v-btn>
@@ -84,7 +84,7 @@
                 text
                 color="green"
                 @click="
-                  exportToUSB(false);
+                  exportFunc(false);
                   dialogExport = false;
                 "
                 >OK</v-btn
@@ -187,18 +187,16 @@ export default {
     };
   },
   methods: {
-    exportToUSB(force) {
+    exportFunc(force) {
+      if (this.exportOption === "Download") {
+        this.downloadFile();
+        return;
+      }
       let apiPath = "";
       let form = {};
-      if (this.selected[0].children === undefined) {
-        apiPath = "/api/save/sample";
-        form["file"] = this.selected[0].path;
-      } else {
-        apiPath = "/api/save/project";
-        form["project"] = this.selected[0].path;
-      }
+      apiPath = "/api/save/sample";
+      form["file"] = this.form.file;
 
-      apiPath += "?option=" + this.exportOption;
       apiPath += "?type=" + this.exportFileType;
 
       if (force) {
@@ -234,6 +232,35 @@ export default {
             }
           });
       }
+    },
+    downloadFile() {
+      let type = "";
+      switch (this.exportFileType) {
+        case "SEG2":
+          type = "seg2";
+          break;
+        case "Raw binary":
+          type = "raw";
+          break;
+      }
+
+      axios
+        .get("/api/dl" + this.form.file + "?type=" + type)
+        .then((response) => {
+          let fileName = response.headers["content-disposition"]
+            .split(";")[1]
+            .split("=")[1];
+
+          const blob = new Blob([response.data], {
+            type: "application/octet-stream",
+          });
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = fileName;
+          link.click();
+          URL.revokeObjectURL(link.href);
+        })
+        .catch((error) => console.log(error));
     },
     deleteFile() {
       axios
