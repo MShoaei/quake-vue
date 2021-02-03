@@ -92,7 +92,7 @@
                 :disabled="exportDisabled"
                 block
                 color="primary"
-                @click="exportOption = 'save'"
+                @click="defaultExportOption"
               >
                 Export
               </v-btn>
@@ -171,6 +171,7 @@
                     <v-col cols="12" md="4" sm="6">
                       <v-text-field
                         v-model="newName"
+                        :rules="[rules.nonEmpty]"
                         label="New Name*"
                         required
                       ></v-text-field>
@@ -329,6 +330,7 @@ export default {
     selected: [],
     rules: {
       inRange: (value) => value > 0 && value < 101,
+      nonEmpty: (value) => value.length > 0,
     },
     treeData: [],
     open: [],
@@ -356,7 +358,7 @@ export default {
         list[0].disabled = true;
       }
       if (!this.usbConnected) {
-        list[0].disabled = true;
+        list[1].disabled = true;
       }
       return list;
     },
@@ -435,6 +437,13 @@ export default {
           URL.revokeObjectURL(link.href);
         })
         .catch((error) => console.log(error));
+    },
+    defaultExportOption() {
+      if (this.usbConnected) {
+        this.exportOption = "save";
+      } else if (this.selected[0].children === undefined) {
+        this.exportOption = "download";
+      }
     },
     exportFunc(force) {
       if (this.exportOption === "download") {

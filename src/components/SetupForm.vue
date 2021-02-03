@@ -193,6 +193,18 @@
         started. Please wait...
       </v-sheet>
     </v-bottom-sheet>
+    <v-bottom-sheet v-model="calibrateSheet" hide-overlay inset>
+      <v-sheet
+        class="text-center d-flex justify-center align-center"
+        height="100px"
+      >
+        <v-icon v-if="calibrateResponse.success" color="green" large
+          >mdi-check-circle
+        </v-icon>
+        <v-icon v-else color="red" large>mdi-information </v-icon>
+        {{ calibrateResponse.message }}
+      </v-sheet>
+    </v-bottom-sheet>
     <div id="setup-form">
       <v-form @submit.prevent="setupDevice">
         <v-row>
@@ -223,6 +235,14 @@
             </v-btn>
             <v-btn class="mt-3" color="primary" @click.stop="gainDialog = true">
               Gain
+            </v-btn>
+            <v-btn
+              class="mt-3"
+              color="primary"
+              :loading="calibrateLoading"
+              @click.prevent="calibrateOffset()"
+            >
+              Calibrate Offset
             </v-btn>
           </v-col>
         </v-row>
@@ -301,6 +321,15 @@ export default {
   data: () => ({
     loading: false,
     sheet: false,
+
+    calibrateSheet: false,
+    calibrateLoading: false,
+
+    calibrateResponse: {
+      success: false,
+      message: "",
+    },
+
     channelDialog: false,
     gainDialog: false,
     samplingCompleteDialog: false,
@@ -860,6 +889,24 @@ export default {
         console.log(resp.data);
         this.gainDialog = false;
       });
+    },
+    calibrateOffset: function() {
+      this.calibrateLoading = true;
+      axios
+        .post("/api/calibrate", {})
+        .then((resp) => {
+          this.calibrateResponse.success = true;
+          this.calibrateResponse.message = "Calibration Successful";
+          console.log(resp);
+        })
+        .catch(() => {
+          this.calibrateResponse.success = false;
+          this.calibrateResponse.message = "Calibration failed";
+        })
+        .then(() => {
+          this.calibrateLoading = false;
+          this.calibrateSheet = true;
+        });
     },
   },
   mounted: function() {
