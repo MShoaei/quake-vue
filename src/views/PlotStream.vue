@@ -1,5 +1,10 @@
 <template>
   <v-col>
+    <v-overlay absolute :value="progressOverlay">
+      <v-progress-linear v-model="progressValue" height="25">
+        <strong>{{ Math.ceil(progressValue) }}%</strong>
+      </v-progress-linear>
+    </v-overlay>
     <v-btn icon outlined large color="primary" link to="/">
       <v-icon dark>mdi-arrow-left</v-icon>
     </v-btn>
@@ -75,7 +80,11 @@
                   <v-select
                     label="Option"
                     :items="[
-                      { text: 'Download', value: 'download', disabled: false },
+                      {
+                        text: 'Download',
+                        value: 'download',
+                        disabled: false,
+                      },
                       { text: 'Save to USB', value: 'save', disabled: false },
                     ]"
                     v-model="exportOption"
@@ -148,9 +157,9 @@
 </template>
 
 <script>
-import VuePlotly from "@statnett/vue-plotly";
 import axios from "@/plugins/axios";
 import router from "@/router";
+import VuePlotly from "@statnett/vue-plotly";
 
 export default {
   name: "PlotStream",
@@ -168,6 +177,8 @@ export default {
         success: false,
         message: "",
       },
+      progressOverlay: false,
+      progressValue: 0,
       sheet: false,
 
       i: 0,
@@ -289,6 +300,7 @@ export default {
     },
   },
   created: function() {
+    this.progressOverlay = true;
     axios
       .post("/api/plot", this.form)
       .then((resp) => {
@@ -325,6 +337,9 @@ export default {
         ];
         this.$set(this.layout.xaxis.range, 1, this.plotData.length * 5000000);
       })
+      .catch(() => {
+        this.progressOverlay = false;
+      })
       .then(() => {
         let conn = new WebSocket(
           "ws://" +
@@ -334,6 +349,8 @@ export default {
         );
         conn.binaryType = "arraybuffer";
         conn.onmessage = (event) => {
+          let total = this.globalY.length;
+
           let view = new Int32Array(event.data);
           for (let i = 0; i < this.plotData.length; i++) {
             this.plotData[i].x[this.i] = view[i] + i * 50000;
@@ -354,6 +371,7 @@ export default {
             }
           }
           this.i++;
+          this.progressValue = this.i / total;
         };
         conn.onclose = () => {
           this.layout.yaxis.range =
@@ -374,6 +392,9 @@ export default {
             this.plotData[this.plotData.length - 1].x[this.i]
           );
         };
+      })
+      .catch(() => {
+        this.progressOverlay = false;
       });
   },
 };
