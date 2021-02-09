@@ -8,7 +8,7 @@ import CommandForm from "@/components/CommandForm.vue";
 export default {
   name: "Command",
   components: {
-    CommandForm
-  }
+    CommandForm,
+  },
 };
 </script>

@@ -82,7 +82,7 @@
 </template>
 
 <script>
-const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
+const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 import axios from "@/plugins/axios";
 
@@ -95,55 +95,55 @@ export default {
         voltage: {
           ch1: 0,
           ch2: 0,
-          ch3: 0
+          ch3: 0,
         },
         current: {
           ch1: 0,
           ch2: 0,
-          ch3: 0
-        }
+          ch3: 0,
+        },
       },
       sensor1: {
         voltage: {
           ch1: 0,
           ch2: 0,
-          ch3: 0
+          ch3: 0,
         },
         current: {
           ch1: 0,
           ch2: 0,
-          ch3: 0
-        }
+          ch3: 0,
+        },
       },
       sensor2: {
         voltage: {
           ch1: 0,
           ch2: 0,
-          ch3: 0
+          ch3: 0,
         },
         current: {
           ch1: 0,
           ch2: 0,
-          ch3: 0
-        }
+          ch3: 0,
+        },
       },
       sensor3: {
         voltage: {
           ch1: 0,
           ch2: 0,
-          ch3: 0
+          ch3: 0,
         },
         current: {
           ch1: 0,
           ch2: 0,
-          ch3: 0
-        }
-      }
+          ch3: 0,
+        },
+      },
     };
   },
   async mounted() {
     while (this.visible) {
-      axios.get("/api/info").then(resp => {
+      axios.get("/api/info").then((resp) => {
         let data = resp.data;
         console.log(data);
         for (let i = 0; i < 4; i++) {
@@ -161,7 +161,7 @@ export default {
   },
   beforeDestroy() {
     this.visible = false;
-  }
+  },
 };
 </script>
 

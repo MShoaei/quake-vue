@@ -23,17 +23,18 @@ const routes = [
     path: "/command",
     name: "command",
     // component: Command,
-    component: () => import(/* webpackChunkName: "command" */ "../views/Command.vue")
+    component: () =>
+      import(/* webpackChunkName: "command" */ "../views/Command.vue"),
   },
   {
     path: "/setup",
     name: "setup",
     // component: Setup,
-        // route level code-splitting
+    // route level code-splitting
     // this generates a separate chunk (setup.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "setup" */ "../views/Setup.vue")
+      import(/* webpackChunkName: "setup" */ "../views/Setup.vue"),
   },
   { path: "/", redirect: "/setup" },
   { path: "*", redirect: "/" },
