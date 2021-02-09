@@ -5,12 +5,6 @@
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" color="white" fixed light temporary>
       <v-list>
-        <v-list-item link to="/command">
-          <v-list-item-icon>
-            <v-icon></v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>Commands</v-list-item-content>
-        </v-list-item>
         <v-list-item link to="/setup">
           <v-list-item-icon>
             <v-icon>mdi-cog-outline</v-icon>
@@ -34,6 +28,12 @@
             <v-icon>mdi-information</v-icon>
           </v-list-item-icon>
           <v-list-item-content>Board Info</v-list-item-content>
+        </v-list-item>
+        <v-list-item link to="/command">
+          <v-list-item-icon>
+            <v-icon></v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>Commands</v-list-item-content>
         </v-list-item>
         <v-list-group no-action>
           <template v-slot:activator>
@@ -60,7 +60,6 @@
       </v-list>
     </v-navigation-drawer>
     <v-main>
-      <ConfirmUpdateOverlay :overlay="overlay" />
       <router-view />
     </v-main>
   </v-app>
@@ -68,19 +67,13 @@
 
 <script>
 import Vue from "vue";
-import ConfirmUpdateOverlay from "@/components/ConfirmUpdateOverlay";
 import axios from "@/plugins/axios";
 
 export default Vue.extend({
   name: "App",
 
-  components: {
-    ConfirmUpdateOverlay
-  },
-
   data: () => ({
     drawer: false,
-    overlay: false
   }),
   methods: {
     shutdownSequence: () => {
@@ -88,7 +81,7 @@ export default Vue.extend({
     },
     restartSequence: () => {
       axios.post("/api/rpi/restart");
-    }
-  }
+    },
+  },
 });
 </script>
