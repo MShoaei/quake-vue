@@ -1,12 +1,127 @@
 <template>
   <v-row>
     <v-col cols="12" md="8">
+      <v-dialog v-model="project.newProjectDialog" max-width="600px">
+        <v-card>
+          <v-card-title class="headline">
+            Create new project
+          </v-card-title>
+          <v-card-text>
+            <v-form>
+              <v-container>
+                <v-row>
+                  <v-col cols="12" md="4">
+                    <v-text-field
+                      v-model="project.projectName"
+                      label="Project Name"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn text @click="project.newProjectDialog = false">
+              Cancel
+            </v-btn>
+            <v-btn color="green darken-1" text @click.prevent="createProject()">
+              Create
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <v-dialog v-model="project.openProjectDialog" max-width="600px">
+        <v-card>
+          <v-card-title class="headline">
+            Open Project
+          </v-card-title>
+          <v-card-text>
+            <v-list shaped>
+              <v-list-item-group
+                v-model="project.newState"
+                multiple
+                color="indigo"
+              >
+                <v-list-item
+                  v-for="(item, i) in project.allProjects"
+                  :value="item"
+                  :key="i"
+                >
+                  <template v-slot:default="{ active }">
+                    <v-list-item-content>
+                      <v-list-item-title v-text="item.name"></v-list-item-title>
+                    </v-list-item-content>
+
+                    <v-list-item-action>
+                      <v-checkbox
+                        :input-value="active"
+                        color="deep-purple accent-4"
+                      ></v-checkbox>
+                    </v-list-item-action>
+                  </template>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn text @click="project.openProjectDialog = false">
+              Cancel
+            </v-btn>
+            <v-btn
+              color="green darken-1"
+              text
+              @click.prevent="
+                project.openProjects = project.newState.slice();
+                project.openProjects.sort((a, b) => {
+                  return a.id - b.id;
+                });
+                project.openProjectDialog = false;
+              "
+            >
+              Open
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
       <v-card>
         <v-card-title class="primary white--text headline">
           Data Directory
+          <v-btn
+            class="ml-3"
+            text
+            dark
+            :loading="treeRefresh"
+            @click="refreshTreeData"
+            ><v-icon>mdi-refresh</v-icon></v-btn
+          >
+          <v-spacer></v-spacer>
+          <v-btn
+            color="success"
+            class="mr-1"
+            @click="project.newProjectDialog = true"
+            >New</v-btn
+          >
+          <v-btn class="mr-1" @click="project.openProjectDialog = true"
+            >Open</v-btn
+          >
+          <v-btn
+            color="warning"
+            class="mr-1"
+            dark
+            :disabled="
+              selected.length === 0 || selected[0].children === undefined
+            "
+            @click="deleteTreeItem(project.openProjects, selected[0].path)"
+            >Close</v-btn
+          >
         </v-card-title>
         <v-treeview
-          v-if="items[0].children.length > 0"
+          v-if="items.length > 0"
           :active.sync="selected"
           :items="items"
           :load-children="fetchDir"
@@ -14,7 +129,6 @@
           activatable
           color="red"
           dense
-          open-all
           return-object
           transition
         ></v-treeview>
@@ -292,20 +406,21 @@ export default {
         for (const item of resp.data.items) {
           this.currentID++;
           if (item.dir) {
-            this.items[0].children.push({
+            this.items.push({
               id: this.currentID.toString(),
               path: resp.data.directory + item.name,
               name: item.name,
               children: [],
             });
           } else {
-            this.items[0].children.push({
+            this.items.push({
               id: this.currentID.toString(),
               path: resp.data.directory + item.name,
               name: item.name,
             });
           }
         }
+        this.project.openProjects = this.project.allProjects.slice();
       })
       .catch();
   },
@@ -322,6 +437,17 @@ export default {
     exportOption: "save",
     exportFileType: "seg2",
 
+    treeRefresh: false,
+
+    project: {
+      allProjects: [],
+      openProjects: [],
+      newState: [],
+      newProjectDialog: false,
+      openProjectDialog: false,
+      projectName: "",
+    },
+
     plotDirection: 0,
     overwriteDialog: false,
     sheet: false,
@@ -332,19 +458,14 @@ export default {
       inRange: (value) => value > 0 && value < 101,
       nonEmpty: (value) => value.length > 0,
     },
-    treeData: [],
     open: [],
   }),
 
   computed: {
     items() {
-      return [
-        {
-          id: "0",
-          name: "/",
-          children: this.treeData,
-        },
-      ];
+      return this.project.openProjects.length > 0
+        ? this.project.openProjects
+        : this.project.allProjects;
     },
     plotPath() {
       return "/plot?file=" + this.selected[0].path;
@@ -393,24 +514,71 @@ export default {
         })
         .catch();
     },
+    createProject() {
+      axios
+        .post("/api/tree", { name: this.project.projectName })
+        .then((resp) => {
+          console.log(resp);
+          this.currentID++;
+          let item = {
+            id: this.currentID.toString(),
+            path: "/" + this.project.projectName,
+            name: this.project.projectName,
+            children: [],
+          };
+          this.project.allProjects.push(item);
+          this.project.openProjects.push(item);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .then(() => {
+          this.project.projectName = "";
+          this.project.newProjectDialog = false;
+        });
+    },
+    refreshTreeData() {
+      this.currentID = 0;
+      this.project.allProjects = [];
+      this.project.openProjects = [];
+      axios.get("/api/tree/").then((resp) => {
+        for (const item of resp.data.items) {
+          this.currentID++;
+          if (item.dir) {
+            this.items.push({
+              id: this.currentID.toString(),
+              path: resp.data.directory + item.name,
+              name: item.name,
+              children: [],
+            });
+          } else {
+            this.items.push({
+              id: this.currentID.toString(),
+              path: resp.data.directory + item.name,
+              name: item.name,
+            });
+          }
+        }
+      });
+    },
     deleteFileOrFolder() {
       axios
         .delete("/api/tree" + this.selected[0].path)
         .then(() => {
-          this.deleteTreeItem(this.items[0], this.selected[0].path);
+          this.deleteTreeItem(this.items, this.selected[0].path);
         })
         .catch();
       this.dialogDelete = false;
     },
     deleteTreeItem(root, path) {
-      for (let i = 0; i < root.children.length; i++) {
-        if (root.children[i].path === path) {
-          root.children.splice(i, 1);
+      for (let i = 0; i < root.length; i++) {
+        if (root[i].path === path) {
+          root.splice(i, 1);
           return true;
         }
       }
-      for (let i = 0; i < root.children.length; i++) {
-        if (this.deleteTreeItem(root.children[i], path)) {
+      for (let i = 0; i < root.length; i++) {
+        if (this.deleteTreeItem(root[i].children, path)) {
           return true;
         }
       }
