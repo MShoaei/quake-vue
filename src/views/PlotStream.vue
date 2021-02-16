@@ -1,21 +1,21 @@
 <template>
   <v-col>
-    <v-overlay absolute :value="progressOverlay">
-      <v-progress-linear v-model="progressValue" height="25">
-        <strong>{{ Math.ceil(progressValue) }}%</strong>
-      </v-progress-linear>
+    <v-overlay :value="progressOverlay">
+      <v-container>
+        <v-progress-circular v-model="progressValue" size="64" color="primary">
+          <strong>{{ progressValue }}%</strong>
+        </v-progress-circular>
+      </v-container>
     </v-overlay>
     <v-btn icon outlined large color="primary" link to="/">
       <v-icon dark>mdi-arrow-left</v-icon>
     </v-btn>
-    <div>
-      <vue-plotly
-        ref="plot"
-        :data="plotData"
-        :layout="layout"
-        :options="options"
-      />
-    </div>
+    <vue-plotly
+      ref="plot"
+      :data="plotData"
+      :layout="layout"
+      :options="options"
+    />
     <v-row>
       <v-bottom-sheet v-model="sheet" hide-overlay inset>
         <v-sheet
@@ -178,7 +178,7 @@ export default {
         message: "",
       },
       progressOverlay: false,
-      progressValue: 0,
+      progressValue: 0.0,
       sheet: false,
 
       i: 0,
@@ -299,7 +299,7 @@ export default {
       this.dialogDelete = false;
     },
   },
-  created: function() {
+  mounted: function() {
     this.progressOverlay = true;
     axios
       .post("/api/plot", this.form)
@@ -371,7 +371,7 @@ export default {
             }
           }
           this.i++;
-          this.progressValue = this.i / total;
+          this.progressValue = Math.ceil((this.i / total) * 100);
         };
         conn.onclose = () => {
           this.layout.yaxis.range =
@@ -386,6 +386,7 @@ export default {
               this.plotData[i].x = this.movingAverage[i].x;
             }
           }
+          this.progressOverlay = false;
           this.$set(
             this.plotData[this.plotData.length - 1].x,
             this.i,
