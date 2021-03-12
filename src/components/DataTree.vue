@@ -46,7 +46,7 @@
                 color="indigo"
               >
                 <v-list-item
-                  v-for="(item, i) in project.allProjects"
+                  v-for="(item, i) in allProjects"
                   :value="item"
                   :key="i"
                 >
@@ -75,10 +75,7 @@
               color="green darken-1"
               text
               @click.prevent="
-                project.openProjects = project.newState.slice();
-                project.openProjects.sort((a, b) => {
-                  return a.id - b.id;
-                });
+                pushSelectedProjects();
                 project.openProjectDialog = false;
               "
             >
@@ -116,14 +113,25 @@
             :disabled="
               selected.length === 0 || selected[0].children === undefined
             "
-            @click="deleteTreeItem(project.openProjects, selected[0].path)"
+            @click="removeTreeProject"
             >Close</v-btn
+          >
+          <v-btn
+            color="yellow"
+            class="mr-1"
+            :disabled="
+              selected.length === 0 ||
+                selected[0].path === projectName ||
+                selected[0].children === undefined
+            "
+            @click="setActiveProject(selected[0].path)"
+            >Active</v-btn
           >
         </v-card-title>
         <v-treeview
-          v-if="items.length > 0"
+          v-if="openProjects.length > 0"
           :active.sync="selected"
-          :items="items"
+          :items="openProjects"
           :load-children="fetchDir"
           :open.sync="open"
           activatable
@@ -391,6 +399,9 @@ import router from "@/router";
 
 export default {
   name: "DataTree",
+  props: {
+    projectName: String,
+  },
   mounted() {
     axios
       .get("/api/usb")
@@ -406,21 +417,20 @@ export default {
         for (const item of resp.data.items) {
           this.currentID++;
           if (item.dir) {
-            this.items.push({
+            this.$store.commit("pushAllProjects", {
               id: this.currentID.toString(),
               path: resp.data.directory + item.name,
               name: item.name,
               children: [],
             });
           } else {
-            this.items.push({
+            this.$store.commit("pushAllProjects", {
               id: this.currentID.toString(),
               path: resp.data.directory + item.name,
               name: item.name,
             });
           }
         }
-        this.project.openProjects = this.project.allProjects.slice();
       })
       .catch();
   },
@@ -440,8 +450,8 @@ export default {
     treeRefresh: false,
 
     project: {
-      allProjects: [],
-      openProjects: [],
+      // allProjects: [],
+      // openProjects: [],
       newState: [],
       newProjectDialog: false,
       openProjectDialog: false,
@@ -462,10 +472,11 @@ export default {
   }),
 
   computed: {
-    items() {
-      return this.project.openProjects.length > 0
-        ? this.project.openProjects
-        : this.project.allProjects;
+    allProjects() {
+      return this.$store.state.allProjects;
+    },
+    openProjects() {
+      return this.$store.state.openProjects;
     },
     plotPath() {
       return "/plot?file=" + this.selected[0].path;
@@ -526,8 +537,8 @@ export default {
             name: this.project.projectName,
             children: [],
           };
-          this.project.allProjects.push(item);
-          this.project.openProjects.push(item);
+          this.$store.commit("pushAllProjects", item);
+          this.$store.commit("pushOpenProjects", item);
         })
         .catch((err) => {
           console.log(err);
@@ -537,22 +548,26 @@ export default {
           this.project.newProjectDialog = false;
         });
     },
+    setActiveProject(path) {
+      axios.patch("/api/project/active", { path: path }).then(() => {
+        this.$emit("changed", path);
+      });
+    },
     refreshTreeData() {
       this.currentID = 0;
-      this.project.allProjects = [];
-      this.project.openProjects = [];
+      this.$store.commit("clearAllprojects");
       axios.get("/api/tree/").then((resp) => {
         for (const item of resp.data.items) {
           this.currentID++;
           if (item.dir) {
-            this.items.push({
+            this.$store.commit("pushAllProjects", {
               id: this.currentID.toString(),
               path: resp.data.directory + item.name,
               name: item.name,
               children: [],
             });
           } else {
-            this.items.push({
+            this.$store.commit("pushAllProjects", {
               id: this.currentID.toString(),
               path: resp.data.directory + item.name,
               name: item.name,
@@ -561,11 +576,21 @@ export default {
         }
       });
     },
+    pushSelectedProjects() {
+      this.$store.commit("setOpenProjects", this.project.newState);
+    },
+    removeTreeProject() {
+      if (this.selected[0].path === this.projectName) {
+        this.setActiveProject("/");
+      }
+      this.$store.commit("removeOpenProjectByPath", this.selected[0].path);
+      this.selected = [];
+    },
     deleteFileOrFolder() {
       axios
         .delete("/api/tree" + this.selected[0].path)
         .then(() => {
-          this.deleteTreeItem(this.items, this.selected[0].path);
+          this.deleteTreeItem(this.openProjects, this.selected[0].path);
         })
         .catch();
       this.dialogDelete = false;
