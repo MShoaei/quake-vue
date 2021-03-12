@@ -2,12 +2,16 @@
   <v-col>
     <v-overlay :value="progressOverlay">
       <v-container>
-        <v-progress-circular v-model="progressValue" size="64" color="primary">
-          <strong>{{ progressValue }}%</strong>
+        <v-progress-circular
+          rotate="-90"
+          v-model="progressValue"
+          size="64"
+          color="primary"
+        >
         </v-progress-circular>
       </v-container>
     </v-overlay>
-    <v-btn icon outlined large color="primary" link to="/">
+    <v-btn icon outlined large color="primary" @click="back">
       <v-icon dark>mdi-arrow-left</v-icon>
     </v-btn>
     <vue-plotly
@@ -224,6 +228,9 @@ export default {
     };
   },
   methods: {
+    back() {
+      this.$router.back();
+    },
     exportFunc(force) {
       if (this.exportOption === "download") {
         this.downloadFile();
@@ -371,7 +378,14 @@ export default {
             }
           }
           this.i++;
-          this.progressValue = Math.ceil((this.i / total) * 100);
+
+          if (this.i % Math.round(total / 20) === 0) {
+            let myVar = Math.ceil((this.i / total) * 110);
+            if (myVar > 100) {
+              myVar = 100;
+            }
+            this.progressValue = myVar;
+          }
         };
         conn.onclose = () => {
           this.layout.yaxis.range =
@@ -386,12 +400,12 @@ export default {
               this.plotData[i].x = this.movingAverage[i].x;
             }
           }
-          this.progressOverlay = false;
           this.$set(
             this.plotData[this.plotData.length - 1].x,
             this.i,
             this.plotData[this.plotData.length - 1].x[this.i]
           );
+          this.progressOverlay = false;
         };
       })
       .catch(() => {
