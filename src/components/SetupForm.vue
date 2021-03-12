@@ -285,7 +285,9 @@
         <v-row>
           <v-col>
             <v-text-field
-              v-model.trim="formData.projectName"
+              v-model.trim="projectName"
+              readonly
+              disabled
               label="Project name"
             ></v-text-field>
           </v-col>
@@ -318,6 +320,9 @@ import router from "@/router";
 
 export default {
   name: "SetupForm",
+  props: {
+    projectName: String,
+  },
   data: () => ({
     loading: false,
     sheet: false,
@@ -785,7 +790,6 @@ export default {
       samplingTime: 1000,
       window: 1,
       fileName: "",
-      projectName: "",
     },
   }),
   methods: {
@@ -851,9 +855,7 @@ export default {
         // component: PlotStream,
         query: {
           file:
-            (this.formData.projectName === "/"
-              ? ""
-              : this.formData.projectName) +
+            (this.projectName === "/" ? "" : this.projectName) +
             "/" +
             this.formData.fileName,
           direction: this.plotDirection,
