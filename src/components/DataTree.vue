@@ -414,6 +414,7 @@ export default {
     axios
       .get("/api/tree/")
       .then((resp) => {
+        this.$store.commit("clearAllprojects");
         for (const item of resp.data.items) {
           this.currentID++;
           if (item.dir) {
