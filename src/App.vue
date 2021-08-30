@@ -10,9 +10,9 @@
             <v-subheader>WiFi networks</v-subheader>
             <v-list-item-group v-model="selectedItem" color="primary">
               <v-list-item
-                @click="passwordDialog = true"
                 v-for="(item, i) in allNetworks"
                 :key="i"
+                @click="passwordDialog = true"
               >
                 <v-list-item-content>
                   <v-list-item-title v-text="item.essid"></v-list-item-title>
@@ -40,10 +40,10 @@
             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             :rules="[rules.required, rules.min]"
             :type="showPassword ? 'text' : 'password'"
-            name="input-10-1"
-            label="Normal with hint text"
-            hint="At least 8 characters"
             counter
+            hint="At least 8 characters"
+            label="Normal with hint text"
+            name="input-10-1"
             @click:append="showPassword = !showPassword"
           ></v-text-field>
         </v-card-text>
@@ -52,7 +52,7 @@
           <v-btn text @click="passwordDialog = false">
             Close
           </v-btn>
-          <v-btn text color="success" @click.prevent="connectToNetwork">
+          <v-btn color="success" text @click.prevent="connectToNetwork">
             Connect
           </v-btn>
         </v-card-actions>
@@ -61,7 +61,16 @@
     <v-app-bar app color="primary" dark>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
-      <v-btn icon @click="openNetworkDialog"><v-icon>mdi-wifi</v-icon></v-btn>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn icon @click="openNetworkDialog" v-bind="attrs" v-on="on">
+            <v-icon>mdi-wifi</v-icon>
+          </v-btn>
+        </template>
+        <span>{{ currentIP }}</span>
+      </v-tooltip>
+
+      <div class=".text-body-1">{{ currentSSID }}</div>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" color="white" fixed light temporary>
       <v-list>
@@ -81,13 +90,19 @@
           <v-list-item-icon>
             <v-icon>mdi-chart-scatter-plot</v-icon>
           </v-list-item-icon>
-          <v-list-item-content>plot</v-list-item-content>
+          <v-list-item-content>Plot</v-list-item-content>
         </v-list-item>
         <v-list-item link to="/info">
           <v-list-item-icon>
             <v-icon>mdi-information</v-icon>
           </v-list-item-icon>
           <v-list-item-content>Board Info</v-list-item-content>
+        </v-list-item>
+        <v-list-item link @click="restoreDefaults">
+          <v-list-item-icon>
+            <v-icon>mdi-restart</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>Restore Defaults</v-list-item-content>
         </v-list-item>
         <v-list-item link to="/command">
           <v-list-item-icon>
@@ -138,6 +153,8 @@ export default Vue.extend({
     networkDialog: false,
     passwordDialog: false,
     allNetworks: [],
+    currentIP: "Not connected",
+    currentSSID: "",
     selectedItem: Number,
     password: "",
     rules: {
@@ -145,20 +162,30 @@ export default Vue.extend({
       min: (v) => v.length >= 8 || "Min 8 characters",
     },
   }),
+  created() {
+    axios.get("/api/wifi").then((resp) => {
+      this.currentSSID = resp.data.ssid;
+      this.currentIP = resp.data.ip;
+    });
+  },
+
   methods: {
     openNetworkDialog: function() {
-      axios.get("/api/wifi/scan").then((resp) => {
+      axios.get("/api/wifi/list").then((resp) => {
         this.allNetworks = resp.data.accessPoints;
         this.networkDialog = true;
       });
     },
     connectToNetwork: function() {
       axios
-        .post("/api/wifi/connect", {
+        .post("/api/wifi", {
           essid: this.allNetworks[this.selectedItem].essid,
           password: this.password,
         })
-        .then(() => {
+        .then((resp) => {
+          console.log(resp.data);
+          this.currentIP = resp.data[1].addr_info[0].local;
+          this.currentSSID = this.allNetworks[this.selectedItem].essid;
           this.selectedItem = Number;
           this.password = "";
           this.passwordDialog = false;
@@ -171,6 +198,9 @@ export default Vue.extend({
     },
     restartSequence: () => {
       axios.post("/api/rpi/restart");
+    },
+    restoreDefaults: () => {
+      axios.post("/api/restore");
     },
   },
 });
