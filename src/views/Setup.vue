@@ -1,14 +1,13 @@
 <template>
   <v-container>
-    <SetupForm :projectName="activePath" />
-    <DataTree :projectName="activePath" @changed="activePathChanged" />
+    <SetupForm/>
+    <DataTree/>
   </v-container>
 </template>
 
 <script>
 import SetupForm from "@/components/SetupForm";
 import DataTree from "@/components/DataTree";
-import axios from "@/plugins/axios";
 
 export default {
   name: "Setup",
@@ -16,18 +15,8 @@ export default {
     DataTree,
     SetupForm,
   },
-  data: () => ({
-    activePath: "",
-  }),
-  beforeCreate: function() {
-    axios.get("/api/project/active").then((resp) => {
-      this.activePath = resp.data.path;
-    });
-  },
-  methods: {
-    activePathChanged: function(path) {
-      this.activePath = path;
-    },
-  },
+  beforeCreate() {
+    this.$store.dispatch("refreshProjects");
+  }
 };
 </script>
