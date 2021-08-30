@@ -1,10 +1,13 @@
 module.exports = {
+  configureWebpack: {
+    devtool: "source-map",
+  },
   css: {
     loaderOptions: {
       sass: {
-        implementation: require("sass") // This line must in sass option
-      }
-    }
+        implementation: require("sass"), // This line must in sass option
+      },
+    },
   },
   transpileDependencies: ["vuetify"],
   devServer: {
@@ -12,11 +15,11 @@ module.exports = {
       "^/api": {
         target: "http://localhost:9090/",
         pathRewrite: {
-          "^/api": ""
+          "^/api": "",
         },
         changeOrigin: true,
-        ws: true
-      }
-    }
-  }
+        ws: true,
+      },
+    },
+  },
 };
