@@ -175,9 +175,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text @click="samplingCompleteDialog = false">
-            No
-          </v-btn>
+          <v-btn text @click="samplingCompleteDialog = false"> No </v-btn>
           <v-btn color="green darken-1" text @click.prevent="showPlot">
             Yes
           </v-btn>
@@ -186,9 +184,7 @@
     </v-dialog>
     <v-dialog v-model="saveConfigDialog" max-width="600px">
       <v-card>
-        <v-card-title class="headline">
-          Save Configuration As
-        </v-card-title>
+        <v-card-title class="headline">Save Configuration As</v-card-title>
         <v-card-text>
           <v-form>
             <v-container>
@@ -207,9 +203,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text @click="saveConfigDialog = false">
-            Cancel
-          </v-btn>
+          <v-btn text @click="saveConfigDialog = false"> Cancel </v-btn>
           <v-btn
             color="green darken-1"
             text
@@ -225,9 +219,7 @@
     </v-dialog>
     <v-dialog v-model="loadConfigDialog" max-width="600px">
       <v-card>
-        <v-card-title class="headline">
-          Select Configuration
-        </v-card-title>
+        <v-card-title class="headline"> Select Configuration </v-card-title>
         <v-card-text>
           <v-form>
             <v-container>
@@ -243,9 +235,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text @click="loadConfigDialog = false">
-            Cancel
-          </v-btn>
+          <v-btn text @click="loadConfigDialog = false"> Cancel </v-btn>
           <v-btn color="green darken-1" text @click.prevent="loadConfig()">
             Open
           </v-btn>
@@ -464,18 +454,7 @@ export default {
       nonEmpty: (value) => value.length > 0,
     },
     recordTimes: [
-      32,
-      64,
-      128,
-      256,
-      512,
-      1024,
-      2048,
-      4096,
-      8192,
-      16384,
-      32768,
-      65536,
+      32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536,
     ],
     samplingTimes: [31.25, 62.5, 125, 250, 500, 1000],
     channels: [
@@ -915,7 +894,7 @@ export default {
     },
   }),
   computed: {
-    activeProjectPath: function() {
+    activeProjectPath: function () {
       let proj = this.$store.getters.activeProject;
       if (proj !== undefined) {
         return proj.path;
@@ -924,7 +903,7 @@ export default {
     },
   },
   methods: {
-    saveConfig: function() {
+    saveConfig: function () {
       this.config.channels = this.channels;
       this.config.gains = new Array(24);
       for (let i = 0; i < 24; i++) {
@@ -948,7 +927,7 @@ export default {
           console.log(error);
         });
     },
-    loadConfig: function() {
+    loadConfig: function () {
       axios
         .get("/api/config/" + this.config.name)
         .then((response) => {
@@ -958,12 +937,12 @@ export default {
           console.log(error);
         });
     },
-    getAllConfigs: function() {
+    getAllConfigs: function () {
       axios.get("/api/config").then((response) => {
         this.allConfigs = response.data.configs;
       });
     },
-    setupDevice: function() {
+    setupDevice: function () {
       this.samplingLoading = true;
       this.samplingStartSheet = true;
       this.samplingSheet = false;
@@ -983,17 +962,17 @@ export default {
           this.samplingLoading = false;
         });
     },
-    selectAll: function() {
+    selectAll: function () {
       for (let i = 0; i < 24; i++) {
         this.$set(this.channels, i, true);
       }
     },
-    clearAll: function() {
+    clearAll: function () {
       for (let i = 0; i < 24; i++) {
         this.$set(this.channels, i, false);
       }
     },
-    selectHalf: function(start, end) {
+    selectHalf: function (start, end) {
       for (let i = 0; i < 24; i++) {
         this.$set(this.channels, i, false);
       }
@@ -1001,7 +980,7 @@ export default {
         this.$set(this.channels, i, true);
       }
     },
-    selectChannelGain: function(channel, key) {
+    selectChannelGain: function (channel, key) {
       let newValue = this.gains[channel === "All" ? 0 : channel][key];
       if (channel === "All") {
         Object.keys(this.gains[0]).forEach((key) => {
@@ -1026,7 +1005,7 @@ export default {
         this.$set(this.gains[channel], key, true);
       }
     },
-    showPlot: function() {
+    showPlot: function () {
       router.push({
         path: "/plot",
         // component: PlotStream,
@@ -1039,7 +1018,7 @@ export default {
         },
       });
     },
-    setChannels: function() {
+    setChannels: function () {
       this.channelDialog = false;
       this.triggerChannelsList = [];
       for (let i = 0; i < this.channels.length; i++) {
@@ -1052,7 +1031,7 @@ export default {
         console.log(resp.data);
       });
     },
-    setGains: function() {
+    setGains: function () {
       let gains = new Array(24);
       for (let i = 0; i < 24; i++) {
         Object.keys(this.gains[i + 1]).forEach((value) => {
@@ -1069,7 +1048,7 @@ export default {
         this.gainDialog = false;
       });
     },
-    calibrateOffset: function() {
+    calibrateOffset: function () {
       this.calibrateLoading = true;
       axios
         .post("/api/calibrate", {})
@@ -1088,7 +1067,7 @@ export default {
         });
     },
   },
-  mounted: function() {
+  mounted: function () {
     axios.get("/api/channels").then((resp) => {
       this.channels = resp.data.channels;
     });

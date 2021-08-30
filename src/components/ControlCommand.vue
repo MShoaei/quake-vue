@@ -21,14 +21,14 @@ import axios from "@/plugins/axios";
 export default {
   name: "ControlCommand",
   props: {
-    cmd: String
+    cmd: String,
   },
   methods: {
-    submitForm: function(command, adc) {
+    submitForm: function (command, adc) {
       this.loading = true;
       axios
         .post("/api/command/" + command + "/" + adc, this.form)
-        .then(response => {
+        .then((response) => {
           this.commandResponse =
             response.data.message +
             " " +
@@ -38,14 +38,14 @@ export default {
             response.data.rx;
           this.errorResponse = false;
         })
-        .catch(error => {
+        .catch((error) => {
           this.commandResponse = error.message;
           this.errorResponse = true;
         });
       this.loading = false;
-    }
+    },
   },
-  mounted: function() {
+  mounted: function () {
     switch (this.cmd) {
       case "ChStandby":
         break;
@@ -106,7 +106,7 @@ export default {
   data: () => ({
     selectedADC: "all",
     submitForm: {},
-    loading: false
-  })
+    loading: false,
+  }),
 };
 </script>

@@ -15,7 +15,7 @@
       >
         <v-row>
           <v-col class="d-flex align-center" cols="1">
-            <div class="body-1 " v-text="c.value"></div>
+            <div class="body-1" v-text="c.value"></div>
           </v-col>
           <v-col cols="1">
             <v-select
@@ -64,7 +64,7 @@ import axios from "@/plugins/axios";
 export default {
   name: "CommandForm",
   methods: {
-    submitForm: function(command, adc, data) {
+    submitForm: function (command, adc, data) {
       this.loading = true;
       axios
         .post("/api/command/" + command + "/" + adc, data)
@@ -84,7 +84,7 @@ export default {
         });
       this.loading = false;
     },
-    submitChCommand: function(command, adc, data) {
+    submitChCommand: function (command, adc, data) {
       let channels = [true, true, true, true, true, true, true, true];
       for (let i = 0; i < 8; i++) {
         channels[i] = data["ch" + i.toString()];

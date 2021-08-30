@@ -3,9 +3,7 @@
     <v-col cols="12" md="8">
       <v-dialog v-model="project.newProjectDialog" max-width="600px">
         <v-card>
-          <v-card-title class="headline">
-            Create new project
-          </v-card-title>
+          <v-card-title class="headline"> Create new project </v-card-title>
           <v-card-text>
             <v-form>
               <v-container>
@@ -35,9 +33,7 @@
 
       <v-dialog v-model="project.openProjectDialog" max-width="600px">
         <v-card>
-          <v-card-title class="headline">
-            Open Project
-          </v-card-title>
+          <v-card-title class="headline"> Open Project </v-card-title>
           <v-card-text>
             <v-list shaped>
               <v-list-item-group v-model="newState" color="indigo" multiple>
@@ -116,8 +112,8 @@
           <v-btn
             :disabled="
               selected.length === 0 ||
-                selected[0].path === activeProjectPath ||
-                selected[0].children === undefined
+              selected[0].path === activeProjectPath ||
+              selected[0].children === undefined
             "
             class="mr-1"
             color="yellow"
@@ -195,9 +191,7 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn text @click="dialogAverageWindow = false">Cancel</v-btn>
-                <v-btn color="success" text @click="showPlot">
-                  OK
-                </v-btn>
+                <v-btn color="success" text @click="showPlot"> OK </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -247,9 +241,7 @@
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn text @click="dialogExport = false">
-                  Cancel
-                </v-btn>
+                <v-btn text @click="dialogExport = false"> Cancel </v-btn>
                 <v-btn
                   color="green"
                   text
@@ -448,7 +440,7 @@ export default {
   }),
 
   computed: {
-    activeProjectPath: function() {
+    activeProjectPath: function () {
       let proj = this.$store.getters.activeProject;
       if (proj !== undefined) {
         return proj.path;

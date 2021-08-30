@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <SetupForm/>
-    <DataTree/>
+    <SetupForm />
+    <DataTree />
   </v-container>
 </template>
 
@@ -17,6 +17,6 @@ export default {
   },
   beforeCreate() {
     this.$store.dispatch("refreshProjects");
-  }
+  },
 };
 </script>
