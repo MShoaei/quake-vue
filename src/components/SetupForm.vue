@@ -40,9 +40,9 @@
                   >channels 13-24
                 </v-btn>
                 <v-btn block class="mb-4" color="primary" @click="clearAll"
-                  >Clear all</v-btn
-                >
-                <v-btn block color="success" @click="setChannels">OK </v-btn>
+                  >Clear all
+                </v-btn>
+                <v-btn block color="success" @click="setChannels">OK</v-btn>
               </v-col>
             </v-row>
           </v-container>
@@ -161,7 +161,7 @@
           <v-container>
             <v-row>
               <v-col>
-                <v-radio-group label="Plot Direction" v-model="plotDirection">
+                <v-radio-group v-model="plotDirection" label="Plot Direction">
                   <v-radio
                     v-for="(dir, i) in ['top to bottom ↓', 'bottom to top ↑']"
                     :key="i"
@@ -184,13 +184,92 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-bottom-sheet v-model="sheet" hide-overlay inset>
+    <v-dialog v-model="saveConfigDialog" max-width="600px">
+      <v-card>
+        <v-card-title class="headline">
+          Save Configuration As
+        </v-card-title>
+        <v-card-text>
+          <v-form>
+            <v-container>
+              <v-row>
+                <v-col cols="12" md="5">
+                  <v-text-field
+                    v-model="config.name"
+                    label="Configuration Name"
+                    required
+                    :rules="rules"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="saveConfigDialog = false">
+            Cancel
+          </v-btn>
+          <v-btn
+            color="green darken-1"
+            text
+            @click.prevent="
+              saveConfig();
+              saveConfigDialog = false;
+            "
+          >
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="loadConfigDialog" max-width="600px">
+      <v-card>
+        <v-card-title class="headline">
+          Select Configuration
+        </v-card-title>
+        <v-card-text>
+          <v-form>
+            <v-container>
+              <v-col cols="6">
+                <v-select
+                  label="Select Config"
+                  v-model="config.name"
+                  :items="allConfigs"
+                ></v-select>
+              </v-col>
+            </v-container>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="loadConfigDialog = false">
+            Cancel
+          </v-btn>
+          <v-btn color="green darken-1" text @click.prevent="loadConfig()">
+            Open
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-bottom-sheet v-model="samplingStartSheet" hide-overlay inset>
       <v-sheet
         class="text-center d-flex justify-center align-center"
         height="100px"
       >
-        <v-icon color="green" large>mdi-check-circle</v-icon> Sampling has
-        started. Please wait...
+        <v-icon color="green" large>mdi-check-circle</v-icon>
+        Sampling has started. Please wait...
+      </v-sheet>
+    </v-bottom-sheet>
+    <v-bottom-sheet v-model="samplingSheet" hide-overlay inset>
+      <v-sheet
+        class="text-center d-flex justify-center align-center"
+        height="100px"
+      >
+        <v-icon v-if="!samplingResponse.success" color="red" large
+          >mdi-information</v-icon
+        >
+        {{ samplingResponse.message }}
       </v-sheet>
     </v-bottom-sheet>
     <v-bottom-sheet v-model="calibrateSheet" hide-overlay inset>
@@ -201,7 +280,7 @@
         <v-icon v-if="calibrateResponse.success" color="green" large
           >mdi-check-circle
         </v-icon>
-        <v-icon v-else color="red" large>mdi-information </v-icon>
+        <v-icon v-else color="red" large>mdi-information</v-icon>
         {{ calibrateResponse.message }}
       </v-sheet>
     </v-bottom-sheet>
@@ -237,23 +316,46 @@
               Gain
             </v-btn>
             <v-btn
+              :loading="calibrateLoading"
               class="mt-3"
               color="primary"
-              :loading="calibrateLoading"
               @click.prevent="calibrateOffset()"
             >
               Calibrate Offset
             </v-btn>
+            <v-row class="mt-0">
+              <v-col>
+                <v-btn
+                  block
+                  color="primary"
+                  @click.prevent="saveConfigDialog = true"
+                >
+                  Save Config
+                </v-btn>
+              </v-col>
+              <v-col>
+                <v-btn
+                  block
+                  color="primary"
+                  @click.prevent="
+                    getAllConfigs();
+                    loadConfigDialog = true;
+                  "
+                >
+                  Load Config
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-col>
         </v-row>
         <v-row>
           <v-col cols="6" sm="4">
-            <v-subheader>Averaging window</v-subheader>
+            <v-subheader>Averaging Window</v-subheader>
           </v-col>
           <v-col cols="6" sm="2">
             <v-text-field
-              :rules="[rules.inRange]"
               v-model.number="formData.window"
+              :rules="[rules.inRange]"
             >
             </v-text-field>
           </v-col>
@@ -276,8 +378,8 @@
           </v-col>
           <v-col v-if="formData.startMode === 'hammer'" cols="6" sm="2">
             <v-select
-              :items="triggerChannelsList"
               v-model="formData.triggerChannel"
+              :items="triggerChannelsList"
             >
             </v-select>
           </v-col>
@@ -285,22 +387,22 @@
         <v-row>
           <v-col>
             <v-text-field
-              v-model.trim="projectName"
-              readonly
+              v-model.trim="activeProjectPath"
               disabled
-              label="Project name"
+              label="Project Name"
+              readonly
             ></v-text-field>
           </v-col>
           <v-col>
             <v-text-field
               v-model.trim="formData.fileName"
-              label="File name"
+              label="File Name"
             ></v-text-field>
           </v-col>
           <v-col>
             <v-btn
+              :loading="samplingLoading"
               block
-              :loading="loading"
               color="success"
               type="submit"
               @click.prevent="setupDevice"
@@ -316,16 +418,25 @@
 <script>
 import axios from "axios";
 import router from "@/router";
+
 // import PlotStream from "@/views/PlotStream";
 
 export default {
   name: "SetupForm",
-  props: {
-    projectName: String,
-  },
+
   data: () => ({
-    loading: false,
-    sheet: false,
+    loadConfigDialog: false,
+    saveConfigDialog: false,
+    allConfigs: [],
+    config: {
+      name: "",
+      channels: [],
+      gains: [],
+      recordTime: 1024,
+      samplingTime: 1000,
+      startMode: "asap",
+      window: 1,
+    },
 
     calibrateSheet: false,
     calibrateLoading: false,
@@ -335,11 +446,22 @@ export default {
       message: "",
     },
 
+    samplingStartSheet: false,
+    samplingSheet: false,
+    samplingLoading: false,
+
+    samplingResponse: {
+      success: false,
+      message: "",
+    },
+
     channelDialog: false,
     gainDialog: false,
     samplingCompleteDialog: false,
+
     rules: {
       inRange: (value) => value > 0 && value < 101,
+      nonEmpty: (value) => value.length > 0,
     },
     recordTimes: [
       32,
@@ -792,19 +914,74 @@ export default {
       fileName: "",
     },
   }),
+  computed: {
+    activeProjectPath: function() {
+      let proj = this.$store.getters.activeProject;
+      if (proj !== undefined) {
+        return proj.path;
+      }
+      return "";
+    },
+  },
   methods: {
+    saveConfig: function() {
+      this.config.channels = this.channels;
+      this.config.gains = new Array(24);
+      for (let i = 0; i < 24; i++) {
+        Object.keys(this.gains[i + 1]).forEach((value) => {
+          if (
+            typeof this.gains[i + 1][value] === "boolean" &&
+            this.gains[i + 1][value] === true
+          ) {
+            this.config.gains[i] = parseInt(value.slice(1));
+          }
+        });
+      }
+      this.config.recordTime = this.formData.recordTime;
+      this.config.samplingTime = this.formData.samplingTime;
+      this.config.startMode = this.formData.startMode;
+      this.config.window = this.formData.window;
+      axios
+        .post("/api/config", this.config)
+        .then(() => {})
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    loadConfig: function() {
+      axios
+        .get("/api/config/" + this.config.name)
+        .then((response) => {
+          this.config = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getAllConfigs: function() {
+      axios.get("/api/config").then((response) => {
+        this.allConfigs = response.data.configs;
+      });
+    },
     setupDevice: function() {
-      this.loading = true;
-      this.sheet = true;
+      this.samplingLoading = true;
+      this.samplingStartSheet = true;
+      this.samplingSheet = false;
       axios
         .create({ timeout: 1200000 })
         .post("/api/setup", this.formData)
         .then(() => {
           this.samplingCompleteDialog = true;
         })
-        .catch();
-      this.loading = false;
-      // this.sheet = false;
+        .catch((error) => {
+          this.samplingResponse.success = false;
+          this.samplingResponse.message = error.response.data.error;
+          this.samplingStartSheet = false;
+          this.samplingSheet = true;
+        })
+        .then(() => {
+          this.samplingLoading = false;
+        });
     },
     selectAll: function() {
       for (let i = 0; i < 24; i++) {
@@ -855,7 +1032,7 @@ export default {
         // component: PlotStream,
         query: {
           file:
-            (this.projectName === "/" ? "" : this.projectName) +
+            (this.activeProjectPath === "/" ? "" : this.activeProjectPath) +
             "/" +
             this.formData.fileName,
           direction: this.plotDirection,
